@@ -1,0 +1,183 @@
+---
+description: >-
+  One-page tailored LaTeX resumes vs multi-page master: same preamble (Ali: template-resume.tex),
+  fixed section headings (Zhao), Ali job-keyword tailoring, STAR-style bullets, punctuation (no em dash, light
+  parens, no tilde for “about”), hyperlinks, two-line density, pagination without margin cheats.
+  Zhao Yanbo, Ali Syed Ayan, compile_job_package, master-resume, job application PDFs.
+globs: people/**/*_resume.tex,people/**/complete/master-resume.tex,people/**/*_cover-letter.tex,people/**/job link.txt
+alwaysApply: false
+---
+
+# Tailored resumes (`<Person>_<Company>_<Role>_resume.tex`) vs master (`complete/master-resume.tex`)
+
+Tailored packets live under **`people/<Person>/<CompanySlug>/<RoleSlug>/`** (company folder, then role folder). LaTeX/PDF names use **`<Person>_<Company>_<Role>`** as the stem, for example `Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_resume.tex` in `people/Ali-Syed-Ayan/Creaxon-Technologies/Software-Engineer-HK/`. See `scripts/layout_paths.py` (`job_packet_dir`, `tailored_packet_basename`, `tailored_resume_tex`, `tailored_cover_letter_tex`).
+
+Each **role** folder must also include **`job link.txt`** (exact name, including the space): a plain-text file whose **first line** is the **canonical job posting URL** the user supplied (LinkedIn, company careers page, or other). Prefer a short, stable URL without tracking query junk when the user provides both; mirror the same URL in the top-of-file `%` comment on `<Person>_<Company>_<Role>_resume.tex` when applicable. Update `job link.txt` whenever the posting link changes. You can (re)write it with `python scripts/generate_job_package.py --person <Person> --company <CompanySlug> --role <RoleSlug> --job-url "<URL>"` before or after compiling.
+
+## What runs automatically (Cursor)
+
+- **This project rule** is attached when **any** file matching **`globs`** in the frontmatter is **open or in context** (you are editing it, or it is part of the current task). You do **not** need to name the rule.
+- **Skills** (under `.cursor/skills/`) are **not** the same: they load when **explicitly invoked** or when Cursor matches them by description; they are **not** guaranteed every turn. **All Zhao Yanbo resume rules that matter for editing are in this file**; the optional skill file is only a short pointer for people browsing the skills list.
+
+## Zhao Yanbo (`people/Zhao-Yanbo/**`)
+
+| Purpose | Path |
+|--------|------|
+| Master (may be multi-page) | `people/Zhao-Yanbo/complete/master-resume.tex` |
+| Tailored resume (target 1 page) | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.tex` |
+| Cover letter | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_cover-letter.tex` |
+| Job posting URL (plain text) | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/job link.txt` (line 1 = URL) |
+
+From repo root:
+
+```bash
+python scripts/compile_complete_master.py --person Zhao-Yanbo
+python scripts/generate_job_package.py --person Zhao-Yanbo --company HSBC --role Analyst-GFX-Middle-Office --job-url "<posting URL>"
+```
+
+Check page count in `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.log` (`Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.pdf (1 page, ...)`).
+
+## Exception: `people/Ali-Syed-Ayan/**/*_resume.tex`
+
+For **Ali Syed Ayan** only:
+
+- **LaTeX basis:** Use `people/Ali-Syed-Ayan/complete/template-resume.tex` (compiled `template-resume.pdf` beside it) as the **canonical preamble, macros, spacing, and one-page section layout** for new or edited tailored `<PersonSlug>_<CompanySlug>_<RoleSlug>_resume.tex` files under `people/Ali-Syed-Ayan/<CompanySlug>/<RoleSlug>/`. Do **not** treat `complete/master-resume.tex` as the layout or preamble source for Ali one-pagers.
+- **Facts:** Employers, titles, dates, degrees, metrics, and bullet wording still come from `people/Ali-Syed-Ayan/complete/master-resume.tex` and `complete/resume-knowledge-base.yaml`.
+- **Tone and hyperlinks:** Align rhythm, link placement, and contact pattern with `people/Ali-Syed-Ayan/complete/Syed Ayan Ali Resume 2026.pdf` (and the user’s synced copy under `g:\My Drive\Syed Ayan Ali Resume 2026.pdf` when that path exists).
+
+When this rule conflicts with Ali’s section order or Zhao-style fixed headings, follow the project skill **Ali Syed Ayan: tailored resume builder** (`.cursor/skills/ali-syed-ayan-resume-builder/SKILL.md`).
+
+### Ali Syed Ayan: job posting, keywords, and bullet selection
+
+When the user supplies a **job posting URL** (or full pasted JD) for Ali’s tailored `<PersonSlug>_<CompanySlug>_<RoleSlug>_resume.tex`:
+
+1. **Retrieve the posting text** (full description when accessible; otherwise the visible summary plus user paste). Extract about **30 keywords or phrases** (skills, tools, responsibilities, domain terms).
+2. **Map to the master:** In `people/Ali-Syed-Ayan/complete/master-resume.tex` and `complete/resume-knowledge-base.yaml`, find (a) **work bullets** that match each keyword or close synonyms, (b) **Projects** whose stack or outcome matches posting terms, (c) **Skills** lines or tokens that **exactly or closely** match those keywords.
+3. **Build the tailored resume** by **including** those bullets, projects, and skill tokens (still **no invented employers, dates, or metrics**). Prefer **coverage of the posting** over arbitrary caps **while the PDF remains exactly one page**.
+4. **Page fill:** The tailored PDF should **read as a full page**, not a short column with a large empty block at the bottom. If `pdflatex` leaves **noticeable whitespace** on page 1, add more master-backed, posting-relevant lines (work bullets, projects, or skills) until the layout looks balanced. Do **not** cheat with extra vertical glue or sub-template margins.
+5. **Bullet count caps (3 for the two most recent roles, ≥2 for others)** apply to **Zhao Yanbo** and to **Ali only as a pagination fallback:** use them **after** `pdflatex` shows **more than one page**, when trimming alongside **2–3** one-liners and **weakest-bullet → one-liner** swaps per the workflow below. Until length forces trims, Ali’s **default priority** is **keyword and JD alignment**, not fixed bullet counts. If LinkedIn hides text behind **Show more**, expand it or ask the user to paste the full description before finalizing keywords.
+
+**Unchanged for Ali:** STAR shape, **two-line bullets must either fill both wrapped lines with substance or collapse to a single one-liner** (no half-empty second line), punctuation (no em dash, light parentheses, no `~` / `$\sim$` for “about”), hyperlink rules, and the **pagination** sequence (**2–3** one-liners, then **weakest-bullet → one-liner** swap; optional oldest-role omission only with user confirmation).
+
+---
+
+## Scope
+
+- **`people/<Person>/complete/master-resume.tex`**: May exceed **one page** when content requires it.
+- **`people/<Person>/<CompanySlug>/<RoleSlug>/<Person>_<CompanySlug>_<RoleSlug>_resume.tex`**: Must compile to **exactly one PDF page** whenever feasible.
+
+## Punctuation, typography, and STAR bullets
+
+Applies to **resume and cover letter prose** in all paths matched by this rule’s `globs` (tailored packets, masters when open, and cover letters).
+
+### Punctuation
+
+- **Parentheses:** Use **sparingly**; only when they remove real ambiguity (for example a precise legal title). Prefer **commas**, **colons**, and **semicolons** to stack clauses or short lists inside an `\item`.
+- **Em dash:** Do **not** use an em dash (`---` in LaTeX or a Unicode em dash in source) as sentence punctuation. Prefer a **comma**, **colon**, **semicolon**, or a tighter rewrite.
+- **Hyphens:** Use **hyphens** for standard compounds and for **clear date spans** in headings (`Sept.\ 2023 -- Jun.\ 2024`, `Jun.\ 2022 -- Jun.\ 2026`). Use **commas** or **hyphenated phrasing** for “which team / division” inside a title line instead of decorative dash pairs.
+- **Tilde / approximation:** Do **not** use `~` in prose or `$\sim$` for “approximately”; write **about** or **approximately** before the number or percent.
+
+### STAR bullets
+
+- Each `\item` should read as a **condensed STAR** story: lead with a **strong action verb**; fold **Situation** and **Task** into a short phrase; show **Actions** you owned (tools, partners); end with a **quantified Result** when the master supports it (hours, percent, latency, volume, cost).
+- Keep each bullet to **at most two wrapped lines** in the PDF. Do **not** paste long duty paragraphs.
+
+**Ali Syed Ayan tone reference:** When editing Ali’s materials, align rhythm and metric placement with **`people/Ali-Syed-Ayan/complete/Syed Ayan Ali Resume 2026.pdf`** (or **`g:\My Drive\Syed Ayan Ali Resume 2026.pdf`** when available), without inventing facts beyond `people/Ali-Syed-Ayan/complete/master-resume.tex` and `resume-knowledge-base.yaml`.
+
+## Hyperlinks (clickable PDF)
+
+Use **`hyperref`** `\href{URL}{visible text}` anywhere a URL should be clickable in the exported PDF. Match the **spirit** of the 2026 one-pager (`people/Ali-Syed-Ayan/complete/Syed Ayan Ali Resume 2026.pdf` or `g:\My Drive\Syed Ayan Ali Resume 2026.pdf`): contact channels and any documented product or chatbot links appear as real links, not plain text.
+
+### Contact block and cover letters
+
+- **Email:** `\href{mailto:local-part@domain}{local-part@domain}` (or the same address in the visible text).
+- **GitHub, LinkedIn, portfolio:** `\href{https://...}{...}` using the **exact** URLs from that person’s `complete/resume-knowledge-base.yaml` and/or `complete/master-resume.tex`. Prefer short labels in the second argument (`GitHub`, `LinkedIn`) when it still matches the reference layout; otherwise use the full URL as visible text if the user’s template does.
+- **Job posting (cover letter):** For **Ali Syed Ayan** tailored `*_cover-letter.tex`, **do not** link the posting by LinkedIn job ID or `\href` to the job URL in the letter body. Name the **company** and **role** in plain text only. The posting URL still belongs in that packet’s **`job link.txt`** and in `%` comments at the top of the `.tex` file for traceability.
+
+### Ali Syed Ayan tailored cover letters
+
+When editing `people/Ali-Syed-Ayan/<CompanySlug>/<RoleSlug>/*_cover-letter.tex`:
+
+- **Length:** Keep the **entire letter** at or below **250 words** from salutation through sign-off when you count the visible prose, not LaTeX commands.
+- **Opening:** After `Dear Hiring Manager,`, the **first paragraph** must **state plainly** what you are applying for and put the **role title in bold** using `\textbf{...}` once. Include **company name** and location in text. **No** LinkedIn job reference numbers or posting links in the body.
+- **Body:** Follow with a short paragraph that ties your background to the role, then **exactly three** `\item` lines in an `itemize` list. Each item should lead with a **short bold label**, a **colon**, then one dense sentence that maps to the job description and includes **quantified** outcomes where the master supports them, for example hours saved, percent change, latency, revenue context, or monthly cost removed.
+- **Regulated or delivery-heavy work:** Include at least one clear sentence, in prose or inside a bullet, that you have thrived in **high stakes, delivery focused** settings and can bring that discipline to the employer.
+- **Sign-off:** End with `Warm Regards,` then a blank line, then `Syed Ayan Ali` as the printed name, not `Sincerely` or `Ali Syed Ayan` unless the user asks otherwise.
+- **Tone:** Conversational but authoritative, professional, not stiff. Use **contractions** where they sound natural. Vary sentence length. Prefer simple, active verbs. **Do not** use stock AI phrases such as “unlock the potential,” “delve,” “tapestry,” “in summary,” “let’s explore,” “fostering,” or “game changer.”
+- **Punctuation habits:** Avoid decorative hyphen chains, em dashes, stacked parentheses, backslashes used to stack examples, and **excessive** colons outside the three list items. The three bullets are the main place colons should appear.
+
+### Deliverables (chatbots, sites, demos)
+
+- When the **master**, **YAML**, or the user’s **2026 PDF template** already records a **stable URL** for work you describe (e.g. a public site, a documented chatbot or app link, a dashboard), **repeat that URL** in the matching experience or project bullet using `\href{URL}{name or hostname}`. Example already in Ali’s master: `\href{https://hkmrs.org}{hkmrs.org}`.
+- **Do not** invent, guess, or shorten URLs in ways that break the link. If no URL exists in those sources, keep the achievement text **without** a fake link.
+
+## Layout
+
+- **Ali Syed Ayan:** Start from **`people/Ali-Syed-Ayan/complete/template-resume.tex`** for `\documentclass`, `\usepackage` (including **`geometry`**), `\setlength{\parskip}`, `\ressection`, `\resumeSubheading`, `\resumeHeading`, **`itemize`** (`enumitem`), and header block structure. Pull factual bullet content from the master and YAML, not the master’s preamble.
+- **Everyone else (e.g. Zhao Yanbo):** Start from the **same** preamble as that person’s **`complete/master-resume.tex`**: `\documentclass`, `\usepackage` lines (including **`geometry`** margins), `\setlength{\parskip}`, `\ressection`, `\resumeSubheading`, `\resumeHeading`, and **`itemize`** (`enumitem`) settings.
+
+### Pagination vs completeness
+
+- **Do not** tighten margins, `\parskip`, list `itemsep`, or macro vertical skips relative to that person’s **reference preamble** (`complete/master-resume.tex` for Zhao-style packets; `people/Ali-Syed-Ayan/complete/template-resume.tex` for Ali Syed Ayan) just to force one page.
+- If **one page is impossible** while keeping **every** master `Work Experience` entry **and** an unchanged reference preamble, **stop** and tell the user. Practical outs (pick one after user confirms):
+  - Omit the **oldest** role **only** when the user explicitly allows it for that packet, **or**
+  - Accept **two pages** for that tailored packet, **or**
+  - The user agrees to a **documented** one-off preamble tweak (discouraged).
+
+When an oldest role is omitted for pagination, add a **short `%` comment** above `\ressection{Extracurricular Activities}` explaining why.
+
+## Section headings (fixed labels)
+
+Always include these three headings **verbatim**:
+
+1. **`Work Experience`**
+2. **`Extracurricular Activities`**
+3. **`Skills \& Other Information`**
+
+Do **not** rename or merge these sections.
+
+## Work experience entries
+
+- Copy **the same employers, titles, locations, and date ranges** as the master resume (**same date formatting**, e.g. `Sept.\ 2023`, `Jun.\ 2024`, `Present`).
+- **Do not** drop or reorder roles **unless** (a) the user explicitly asks to remove or rewrite the **last** listed role, or (b) the pagination rule above applies and the user approves omitting the oldest entry.
+- Tailoring for a job ad is done **only inside bullet points**, weaving in keywords from the posting **without** inventing employers, titles, dates, degrees, or credentials.
+
+### Bullet counts (Zhao Yanbo; pagination fallback for Ali)
+
+- **Two most recent roles** (first two blocks under Work Experience): **exactly 3** bullets each.
+- **Every other role**: **at least 2** bullets each.
+
+**Ali Syed Ayan:** Do **not** treat the above counts as the default. Follow **Ali Syed Ayan: job posting, keywords, and bullet selection** in the Exception block. Apply **3 / ≥2** caps only when trimming a **multi-page** Ali tailored PDF, together with the **Workflow after edits** steps below.
+
+### Bullet shape
+
+- Aim for **at most two wrapped lines per bullet** in the PDF (concise prose).
+- **Two-line density:** If a bullet **wraps to two lines**, the second line must **earn its space**; add real substance (metric, scope, control, stakeholder, or tool) so it reads as a **full** second line, not a **short orphan** with lots of empty measure below. If you cannot justify a full second line honestly, **collapse** the bullet to **one** strong **one-liner** instead of paying a line for half a line of value.
+- Prefer strong ops/markets language aligned with the posting (e.g. trade lifecycle, booking, settlement, operational risk, STP, downstream Risk/Finance, escalation).
+
+## Education
+
+- Mirror the master resume’s education `\resumeSubheading` rows (schools, degree lines with honours/GPA, dates).
+
+## Extracurricular Activities
+
+- Keep **each activity** as its own `\resumeHeading{...}{...}` with `\begin{itemize}...\end{itemize}` underneath (**≥1 bullet per activity**). Preserve the **master wording** when the tailored PDF already fits **one page**; if pagination still fails after compressing **Work Experience**, you may **shorten extracurricular bullets** (same facts, fewer words) **before** touching **Skills \& Other Information** line items.
+
+## Skills \& Other Information
+
+Use **exactly three** `\item` lines:
+
+1. `\textbf{Languages:} ...`
+2. `\textbf{IT skills:} ...`
+3. `\textbf{Interests:} ...`
+
+Keep labels identical; body text should match the master unless the user requests edits.
+
+## Workflow after edits
+
+Compile via `scripts/generate_job_package.py --person … --company … --role …` (or the project `pdflatex` helper). When the user supplies a posting URL for a packet, keep **`job link.txt`** in the **role** folder updated (line 1 = URL) or pass **`--job-url "<URL>"`** to the script. If the PDF is **longer than one page**, paginate in this order (still **no** margin or list-spacing cheats):
+
+1. **Introduce 2-3 one-liner bullets** across the resume: pick bullets that are long or wrap badly (often **older / less posting-relevant** `Work Experience` roles, or **Extracurricular** bullets) and rewrite each as a **single dense line** in the PDF. Spread these **2-3** edits across sections so you do not strip only one block unless one pass is enough.
+2. If the PDF is **still** longer than one page after recompiling, treat that as **consistently** over length: in the **least posting-relevant** area (weakest bullet in the oldest or farthest-from-role `Work Experience` block, or a peripheral Education/Extracurricular bullet), **cut that bullet’s verbose text** and **replace the same `\item` slot** with **one** **one-liner** that keeps the strongest verifiable fact or keyword. Repeat sparingly toward more relevant bullets, without dropping below **minimum bullet counts** unless the user approved an exception (e.g. omitting the oldest role). **For Ali Syed Ayan**, once length pressure is clear, you may also enforce **at most 3** bullets for each of the **two** most recent roles and **at least 2** for other retained roles **as part of the same trimming pass**, after keyword-rich bullets have been tried first.
+
+Stop when the tailored PDF is **exactly one page** (verify in the `.log` “Output written … (1 page …)” line).

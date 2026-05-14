@@ -1,0 +1,110 @@
+% template-resume.tex — one-page layout mirroring people/Ali-Syed-Ayan/complete/Syed Ayan Ali Resume 2026.pdf
+% Wording and section structure match that PDF (canonical template). Compile from this folder:
+%   pdflatex template-resume.tex
+\documentclass[9pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=6mm]{geometry}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{0.18em}
+
+\setlist[itemize]{leftmargin=1.15em, topsep=0pt, itemsep=0.05em, parsep=0pt, partopsep=0pt}
+
+\newcommand{\ressection}[1]{%
+  \vspace{0.8em}%
+  \noindent{\large\scshape\bfseries #1}\par\nobreak
+  \vspace{-\parskip}%
+  \noindent\rule{\linewidth}{0.1pt}\par\nobreak
+  \vspace{-\parskip}%
+}
+
+\newcommand{\resumeSubheading}[4]{%
+  \vspace{0.6em}%
+  \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{#2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{0.32em}}
+
+\newcommand{\resumeHeading}[2]{%
+  \vspace{0.6em}%
+  \noindent\textbf{\small #1}\hfill\textit{\small #2}\par\vspace{0.28em}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries ALI Syed Ayan}\\[0.35em]
+  \small
+  +852\,97537220 \;\textbar\;
+  \href{mailto:syedayanali28@gmail.com}{syedayanali28@gmail.com} \;\textbar\;
+  \href{https://github.com/syedayanali28}{https://github.com/syedayanali28} \;\textbar\;
+  \href{https://www.linkedin.com/in/syedayanali/}{https://www.linkedin.com/in/syedayanali/}
+\end{center}
+\vspace{0.55em}
+\small
+
+\ressection{Education}
+\resumeSubheading{City University of Hong Kong}{Hong Kong}{Bachelor of Science in Computer Science, Minor in Business Intelligence}{Jun 2022 -- Jun 2026}
+\begin{itemize}
+  \item \textbf{Scholarships \& Awards:} International Student Top Scholarship (HK\$720{,}000), 1x Dean's List, 3x Tiger Talent Program.
+  \item \textbf{Coursework:} Machine Learning, Algorithms, Data Structures, Database Systems, Computer Vision, Data Science, Networks, OS.
+\end{itemize}
+
+\ressection{Work Experience}
+
+\resumeSubheading{Hong Kong Monetary Authority}{Hong Kong}{Analyst Programmer (IT Division - Business Enablement \& Software Architecture Team)}{Jul 2025 -- Present}
+\begin{itemize}
+  \item Engineered an open source chatbot for BRDR utilizing RAG on a knowledge base of 10{,}000 PDFs, using Python for data processing, pgvector for vector storage, and Vector search using SQL for enhanced data retrieval, and integrated Grafana for Observability.
+  \item Developed an agentic firewall review automation tool by using LLMOps best practices, saving 30 hours/month for the security team review, using JIRA API, Next.js, and Policy-as-code language OPA to convert firewall review guidelines into LLM-friendly format.
+  \item Spearheaded the development of an AI Outlook Email Assistant as part of the scrum team, going through the complete SDLC pipeline, functioning as an L3 support for troubleshooting and resolving production issues.
+  \item Worked closely with Product Owner and developers in a cross-functional scrum team to convert requirements into technical workflows, deliver training, prompts, and clear documentation, and generating comprehensive data visualization in Tableau and PowerBI dashboards.
+\end{itemize}
+
+\resumeSubheading{Jay Cee Ess Global}{Remote (Australia-based)}{Software Engineer}{Aug 2025 -- Present}
+\begin{itemize}
+  \item Generated AUD 100{,}000 in revenue per month by participating in performance tracking, resulting in revamping legacy site into a high-performance web app, implementing Google ads, optimizing the UX to increase user intake by 200\% and maximizing conversion rates.
+  \item Minimized cart abandonment by 70\% by integrating Stripe API for seamless multi-method checkout (Apple Pay, Google Pay, Alipay).
+  \item Slashed price retrieval latency by 99\% by engineering a custom in-memory routing engine using Yen's $K$-Shortest Paths algorithm.
+  \item Cut database costs by 75\% by replacing a rigid Supabase implementation with Vercel's Upstash Redis enabling fast lookups, complex routing capabilities (multi-carrier routes) unlocking new logistics market segments.
+\end{itemize}
+
+\resumeSubheading{Universal Innotech Group Company Limited}{Hong Kong}{Junior Software Engineer}{Sep 2024 -- May 2025}
+\begin{itemize}
+  \item Cut HK\$10{,}000 per month in API costs by developing and deploying an API graph layer using Neo4j graph DB for a B2B BFSI SaaS application for automated KYC processing, scraping AML sanction data and PEP updates using Python scripts
+  \item Developed and maintained Python ETL pipelines for recurring reports, automating data parsing, transformation, and LLM-based analysis across 50{,}000+ records per reporting cycle, reducing report preparation time by 40\% and improving turnaround time from 2 days to 2 hours.
+  \item Designed structured evaluation frameworks to assess 10+ AI tools and agents across financial datasets, using 4 key performance metrics, including accuracy, consistency, latency, and reliability.
+\end{itemize}
+
+\resumeSubheading{Yi Shing Group Ltd.\ (YSG)}{Hong Kong}{Summer Intern}{Jun 2024 -- Aug 2024}
+\begin{itemize}
+  \item Trained a Yolov8 CV model using real datasets to detect fire and smoke with 99\% accuracy running in real-time production environment.
+  \item Improved operational transparency by 30\% by orchestrating hardware integration testing and live data monitoring for hazard response.
+\end{itemize}
+
+\resumeSubheading{City University of Hong Kong}{Hong Kong}{Student Helper}{Feb 2023 -- March 2024}
+\begin{itemize}
+  \item Conduct exploratory data analysis to identify trends, risks, and opportunities of over 20 ESG reports.
+  \item Coded the official website for Hong Kong Materials Research Society using WordPress, CSS, focusing on SEO, UI/UX.
+\end{itemize}
+
+\ressection{Projects}
+
+\resumeHeading{Blockchain Web3 E-Wallet App}{Feb 2025 -- Mar 2025}
+\begin{itemize}
+  \item Developed a Web3 blockchain app enabling users to create their own wallet, connect to existing wallets, and securely send funds.
+\end{itemize}
+
+\ressection{Skills and Interests}
+\begin{itemize}
+  \item \textbf{Programming Languages:} Python, Go, Rust, SQL, JavaScript, TypeScript, Java, C, C++, Bash, PowerShell, HTML, CSS, UNIX
+  \item \textbf{Libraries \& Frameworks:} Snowflake, React.js, Redis, Node.js, Next.js, Vue.js, FastAPI, Pydantic, Flask, Selenium, NumPy, Pandas, SciPy, Sklearn, Spark, Seaborn, Matplotlib, PyTorch, OpenCV, TensorFlow, ONNX runtime, Ollama, HuggingFace, Transformers
+  \item \textbf{Software and Tools:} Vercel, AWS (S3, Lambda, Redshift, Quicksight), Azure, GitHub, Redhat Linux, Postman, Kubernetes, Docker, Jira, Grafana, Confluence, PostgreSQL, MySQL, MongoDB, Google Suite, Microsoft Office package, Word, Excel, PowerPoint, ServiceNow, Ansible
+  \item \textbf{Skills:} GenAI, DevOps, MLOps, System Design, Software architecture, Strong analytical mindset, Solution Engineering, REST APIs, UI/UX, CI/CD, MCP servers, Structured thinking, storytelling skills, Meticulous, Ownership, Proactive, Autonomous, Results-oriented, Troubleshooting
+  \item \textbf{Languages:} English, Cantonese, Mandarin, Urdu, Hindi
+  \item \textbf{Interests:} Swimming, running, chess, Formula 1
+\end{itemize}
+
+\end{document}

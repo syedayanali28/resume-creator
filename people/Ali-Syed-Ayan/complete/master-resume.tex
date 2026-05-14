@@ -1,0 +1,232 @@
+% Master resume — general-purpose CV (people/Ali-Syed-Ayan/complete/).
+% Compile: python scripts/compile_complete_master.py --person Ali-Syed-Ayan
+%
+% --- Bullets and wording (editor reference) ---
+% One-page tone and example phrasing: g:\My Drive\Syed Ayan Ali Resume 2026.pdf
+% STAR: each bullet is a compact story; lead with a strong action verb; fold situation or
+% task into the clause; state what you did with tools or ownership; end with a measurable
+% result when the facts support it. Keep each bullet to at most two wrapped lines in the PDF.
+% Punctuation: avoid em dashes; use parentheses only when necessary for clarity; spell
+% ``about'' or ``approximately'' in text instead of a tilde or math ``similar'' for rounding;
+% use colons and semicolons to structure clauses inside bullets; reserve hyphens mainly for date ranges and standard
+% compounds; use \texttt{--} in LaTeX for date spans in headings.
+% Hyperlinks: keep \href on email, GitHub, LinkedIn in the header; add \href for any deliverable URL
+% documented here or in g:\My Drive\Syed Ayan Ali Resume 2026.pdf; never invent URLs.
+%
+% Page: A4 (option \texttt{a4paper} on \documentclass).
+% Margins (geometry): \texttt{margin=10mm} on all sides (LEFT = RIGHT = TOP = BOTTOM).
+% To customise, replace that line e.g.
+%   \usepackage[left=12mm,right=12mm,top=10mm,bottom=12mm]{geometry}
+%   \usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=10mm]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{0.35em}
+
+\newcommand{\ressection}[1]{%
+  \par\vspace{0.65em}%
+  \noindent{\large\scshape\bfseries #1}\par\nobreak
+  \noindent\rule{\linewidth}{0.4pt}\par\vspace{0.4em}}
+
+\setlist[itemize]{leftmargin=1.2em, topsep=0pt, itemsep=0.12em, parsep=0pt, partopsep=0pt}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{0.2em}
+  \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{#2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-0.3em}
+}
+
+\newcommand{\resumeHeading}[2]{
+  \vspace{0.15em}
+  \noindent\textbf{\small #1}\hfill\textit{\small #2}\par\vspace{0.1em}
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Ali Syed Ayan}\\[0.35em]
+  \small
+  +852\,97537220 \;\textbar\;
+  \href{mailto:syedayanali28@gmail.com}{syedayanali28@gmail.com} \;\textbar\;
+  \href{https://github.com/syedayanali28}{GitHub} \;\textbar\;
+  \href{https://www.linkedin.com/in/syedayanali/}{LinkedIn}
+\end{center}
+\vspace{-0.2em}
+
+% ---------- Education (stable across tailored versions) ----------
+\ressection{Education}
+\resumeSubheading{City University of Hong Kong}{Hong Kong}{B.Sc.\ Computer Science, Minor in Business Intelligence}{Jun 2022 -- Jun 2026}
+\begin{itemize}
+  \item Scholarships \& awards: International Student Top Scholarship (HK\$720{,}000 total); Dean's List; Tiger Talent Program (3$\times$).
+  \item Coursework: Web Application Development, Big Data Analytics, Machine Learning, Data Structures \& Algorithms, Database Systems, Fundamentals of Data Science, Operating Systems, Computer Networks, Software Engineering, Discrete Mathematics, Computer Vision, Data Science.
+\end{itemize}
+
+% ---------- Experience ----------
+\ressection{Work Experience}
+
+\resumeSubheading{Hong Kong Monetary Authority}{Hong Kong}{Analyst Programmer (IT Division -- Business Enablement \& Software Architecture)}{Jul 2025 -- Present}
+
+\noindent\textit{AI / ML, data platforms, and automation}
+\begin{itemize}
+  \item Engineered an open-source chatbot for BRDR using retrieval-augmented generation (RAG) over a knowledge base of about 10{,}000 PDFs; Python for ingestion and processing, \texttt{pgvector} for embeddings, SQL-backed vector search, and Grafana for observability.
+  \item Built an agentic firewall review automation tool using LLMOps practices (JIRA API, Next.js, Open Policy Agent) to encode review guidelines as policy-as-code and LLM-friendly workflows, reducing security review effort by about 30 hours/month.
+\end{itemize}
+
+\noindent\textit{Product delivery, operations, and stakeholder collaboration}
+\begin{itemize}
+  \item Spearheaded an AI Outlook Email Assistant within a Scrum team across the full SDLC; served as L3 support for production troubleshooting and incident resolution.
+  \item Worked with the Product Owner and engineers to translate requirements into technical workflows; delivered training, prompts, and documentation; produced Tableau and Power BI dashboards for reporting.
+\end{itemize}
+
+\resumeSubheading{Jay Cee Ess Global}{Remote (Australia-based)}{Software Engineer}{Aug 2025 -- Present}
+
+\noindent\textit{Growth, conversion, and product}
+\begin{itemize}
+  \item Participated in performance tracking that supported about AUD\,100{,}000/month revenue; helped revamp a legacy site into a high-performance web app, run Google Ads, improve UX (about 200\% user intake), and lift conversion rates.
+\end{itemize}
+
+\noindent\textit{Payments and e-commerce}
+\begin{itemize}
+  \item Reduced cart abandonment about 70\% by integrating Stripe with Apple Pay, Google Pay, and Alipay for multi-method checkout.
+\end{itemize}
+
+\noindent\textit{Algorithms and performance engineering}
+\begin{itemize}
+  \item Cut price retrieval latency about 99\% with a custom in-memory routing engine based on Yen's $K$-shortest paths algorithm.
+\end{itemize}
+
+\noindent\textit{Data layer and infrastructure}
+\begin{itemize}
+  \item Reduced database costs about 75\% by replacing a rigid Supabase setup with Vercel Upstash Redis for fast lookups and complex multi-carrier routing, unlocking new logistics market segments.
+\end{itemize}
+
+\resumeSubheading{Universal Innotech Group Company Limited}{Tsuen Wan, Hong Kong}{Junior Software Engineer}{Sep 2024 -- May 2025}
+
+\noindent\textit{General administration, content, and documentation}
+\begin{itemize}
+  \item Applied data mining to extract and analyse Chinese insurance data from 200+ PDFs, saving 200+ hours.
+  \item Improved IIQE exam answer prediction via prompt engineering (accuracy 40\% $\rightarrow$ 92\%).
+  \item Delivered a food product showcase site with Next.js, Tailwind CSS, and React; sales increased over 100\%.
+  \item Authored interactive PowerPoint materials for online design courses; course enrolment up 80\%.
+  \item Produced AML web-application documentation following team standards and consistent formatting.
+\end{itemize}
+
+\noindent\textit{Software engineering and cloud}
+\begin{itemize}
+  \item Optimised a broker management web app with reusable React components, Cache-Control headers, and server-side rendering; load times improved over 50\%.
+  \item Refactored a B2B SaaS platform with RESTful APIs and Neo4j integration for relationship visualisation; about 30\% faster client decision-making.
+  \item Deployed Python database update jobs on AWS (S3, Lambda) using Cypher to refresh Neo4j on a schedule.
+\end{itemize}
+
+\noindent\textit{Web development}
+\begin{itemize}
+  \item Built AML checking and PEP automation in JavaScript, React, and Python; reduced Open Sanction API spend by HK\$\,10{,}000+/month.
+  \item Extended broker portal with reusable components (e.g.\ Support Ticket history, Admin Dashboard), SSR, and caching; load time reduced over 50\%.
+\end{itemize}
+
+\noindent\textit{Data analysis and AI evaluation}
+\begin{itemize}
+  \item Reviewed AI literature (e.g.\ Qwen, BERT, LLaMA, Gemma) and summarised findings in Tableau.
+  \item Applied TF-IDF, PCA, $k$-means, SVM, anomaly detection, and topic modelling to insurance data; saved 500+ hours of manual work.
+  \item Used LLMs to extract structured data from 40+ Chinese KYC/CDD documents; improved turnaround by 3+ days.
+  \item Performed ad-hoc analyses in Python and SQL to answer business questions.
+\end{itemize}
+
+\noindent\textit{Representative platform outcomes (cross-cutting)}
+\begin{itemize}
+  \item Graph API layer on Neo4j for B2B BFSI KYC automation; Python scraping for sanctions and PEP updates.
+  \item Python ETL pipelines for recurring reports (50{,}000+ records/cycle); report prep time $-40\%$, turnaround from 2 days to 2 hours.
+  \item Evaluation frameworks for 10+ AI tools/agents on financial data (accuracy, consistency, latency, reliability).
+\end{itemize}
+
+\resumeSubheading{Yi Shing Group Ltd.\ (YSG)}{Science Park, Hong Kong}{Machine Learning Intern}{Jun 2024 -- Aug 2024}
+\begin{itemize}
+  \item Real-time fire and smoke detection with YOLOv8 (about 90\% accuracy); about 95\% after optimisation and migration toward Google Cloud Vertex AI.
+  \item Full-stack Flask application connected to Vertex AI; CI/CD for deployments.
+  \item Webcam-based live inference; Huawei Cloud ModelArts/OBS pipeline for experiments and storage.
+  \item Collaborated with electrical engineering on camera integration and field tests; defined endpoints for load and performance testing.
+\end{itemize}
+
+\resumeSubheading{Yi Shing Group Ltd.\ (YSG)}{Science Park, Hong Kong}{Machine Learning Intern}{Jun 2023 -- Aug 2023}
+\begin{itemize}
+  \item Computer vision models with PyTorch and YOLO on Google Colab; datasets from Roboflow and Kaggle.
+  \item Preprocessing, resizing, normalisation; bounding-box annotation; accuracy improved from 50\% to 70\%.
+  \item Raspberry Pi prototype linking detections to a fire curtain; Streamlit app for annotated outputs.
+\end{itemize}
+
+\resumeSubheading{City University of Hong Kong}{Kowloon Tong, Hong Kong}{Student Helper and Mentor}{Feb 2023 -- Mar 2024}
+\begin{itemize}
+  \item Exploratory analysis on 20+ ESG reports (trends, risks, opportunities).
+  \item Built \href{https://hkmrs.org}{hkmrs.org} with WordPress and CSS; SEO and UI/UX focus.
+  \item Delivered a TensorFlow model development workshop for 30+ students and faculty (TED CityU).
+  \item Supported ad-hoc tasks for the Talent and Education Department.
+\end{itemize}
+
+\resumeSubheading{Fori Inc.}{Islamabad, Pakistan}{Technology Resource}{May 2021 -- Jun 2021}
+\begin{itemize}
+  \item Prototyped real-time traffic pattern analysis with Selenium and BeautifulSoup (Google Maps screenshots) and a HTML/CSS/JavaScript dashboard.
+\end{itemize}
+
+% ---------- Projects ----------
+\ressection{Projects}
+
+\resumeHeading{Blockchain Web3 E-Wallet (JavaScript, TypeScript, Next.js)}{Feb 2025 -- Mar 2025}
+\begin{itemize}
+  \item Web3 app for wallet creation, connecting existing wallets, and secure transfers.
+\end{itemize}
+
+\resumeHeading{AI Image Classification (Python, PyTorch)}{Oct 2024 -- Nov 2024}
+\begin{itemize}
+  \item ResNet18 and Vision Transformer; 98\% intra-class and 94\% inter-class accuracy.
+\end{itemize}
+
+\resumeHeading{Movie Search and Recommender (Python, JavaScript, jQuery, Flask)}{Jun 2024 -- Jul 2024}
+\begin{itemize}
+  \item Flask and Pandas pipelines for preprocessing; REST APIs with genre/cast/year filters and pagination.
+\end{itemize}
+
+\resumeHeading{Facial Sentiment Classification (Python, TensorFlow, Keras, OpenCV)}{Feb 2024 -- Mar 2024}
+\begin{itemize}
+  \item CNN for happy vs.\ sad; normalisation and augmentation.
+\end{itemize}
+
+\resumeHeading{Nutrition Tracker App (Java, CLI, BlueJ, Visual Paradigm)}{Feb 2024 -- Mar 2024}
+\begin{itemize}
+  \item UML (class and use-case diagrams); Factory, Builder, State, Observer; SOLID-oriented CLI application.
+\end{itemize}
+
+\resumeHeading{Base kernel project (C, Assembly)}{Feb 2024 -- Mar 2024}
+\begin{itemize}
+  \item Priority scheduling and named pipes in a teaching OS kernel; about 30\% improvement on benchmark tasks and reliable IPC.
+\end{itemize}
+
+% ---------- Skills ----------
+\ressection{Skills \& Interests}
+\begin{itemize}
+  \item \textbf{Languages:} Python, Go, Rust, SQL, JavaScript, TypeScript, Java, C, C++, Bash, PowerShell, HTML, CSS, VBA, Cypher, Assembly, UNIX.
+  \item \textbf{Libraries \& frameworks:} Snowflake, React, Redis, Node.js, Next.js, Vue.js, FastAPI, Pydantic, Flask, Selenium, NumPy, Pandas, SciPy, scikit-learn, Spark, Seaborn, Matplotlib, PyTorch, OpenCV, TensorFlow, ONNX Runtime, Ollama, Hugging Face, Transformers, jQuery, Tailwind CSS, Express.
+  \item \textbf{Data \& AI:} Neo4j, RAG, LLMs, MLOps, LLMOps, GenAI, TF-IDF, PCA, clustering, classification, anomaly detection, topic modelling, Tableau, Power BI.
+  \item \textbf{Cloud \& DevOps:} AWS (S3, Lambda, Redshift, QuickSight), GCP, Azure, Vercel, Docker, Kubernetes, Grafana, CI/CD, Ansible, Linux.
+  \item \textbf{Tools:} Git, GitHub, Jira, Confluence, Postman, PostgreSQL, MySQL, MongoDB, ServiceNow, Microsoft 365, Chinese word processing, MCP servers.
+  \item \textbf{Practices:} Agile/Scrum, REST APIs, system design, software architecture, technical writing, L3 support, UI/UX, SEO (WordPress).
+  \item \textbf{Languages (spoken):} English (fluent); Cantonese and Mandarin (working proficiency); Urdu and Hindi.
+\end{itemize}
+
+% ---------- Awards ----------
+\ressection{Awards, Leadership \& Certifications}
+\begin{itemize}
+  \item International Student Top Scholarship (HK\$720{,}000 total), City University of Hong Kong (Jun 2022 -- Jun 2026).
+  \item President, Pakistan Students' Association, CityU (Dec 2023 -- May 2024).
+  \item Managing Director, Student Committee, Jockey Club Humanity Hall (Hall 1) SRO, CityU (Aug 2023 -- Aug 2024).
+  \item CompTIA Security+; Google Cybersecurity Professional Certificate (in progress, Jan 2025 -- present).
+\end{itemize}
+
+\end{document}

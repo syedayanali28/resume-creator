@@ -1,0 +1,165 @@
+# Master resume knowledge base — lives under people/Ali-Syed-Ayan/complete/
+# Update this file; regenerate job-specific resumes from subsets of these entries.
+
+profile:
+  name: "Ali Syed Ayan"
+  phone: "+852 97537220"
+  email: "syedayanali28@gmail.com"
+  github: "https://github.com/syedayanali28"
+  linkedin: "https://www.linkedin.com/in/syedayanali/"
+  location_default: "Hong Kong"
+
+education:
+  institution: "City University of Hong Kong"
+  degree: "Bachelor of Science in Computer Science, Minor in Business Intelligence"
+  period: "Jun 2022 – Jun 2026"
+  location: "Hong Kong"
+  highlights:
+    - "International Student Top Scholarship (HK$720,000 total); Dean’s List; Tiger Talent Program (3×)"
+    - "Coursework: Web Application Development, Big Data Analytics, Machine Learning, Data Structures & Algorithms, Database Systems, Fundamentals of Data Science, Operating Systems, Computer Networks, Software Engineering, Discrete Mathematics, Computer Vision, Data Science"
+
+experience:
+  - id: hkma
+    company: "Hong Kong Monetary Authority"
+    title: "Analyst Programmer (IT Division — Business Enablement & Software Architecture)"
+    period: "Jul 2025 – Present"
+    location: "Hong Kong"
+    categories:
+      ai_ml_data:
+        - "Engineered an open-source chatbot for BRDR using RAG over ~10,000 PDFs; Python data processing, pgvector storage, SQL-backed vector search, Grafana observability."
+        - "Developed an agentic firewall review automation tool with LLMOps practices (~30 hrs/month saved for security); JIRA API, Next.js, OPA policy-as-code to encode review guidelines for LLMs."
+      product_delivery:
+        - "Led development of an AI Outlook Email Assistant in a Scrum team across the SDLC; L3 support for production troubleshooting and incident resolution."
+      bi_collaboration:
+        - "Partnered with Product Owner and developers to turn requirements into technical workflows; delivered training, prompts, and documentation; built Tableau and Power BI dashboards."
+    flat_bullets: []  # use categories for master; flat for one-page exports
+
+  - id: jaycee
+    company: "Jay Cee Ess Global"
+    title: "Software Engineer"
+    period: "Aug 2025 – Present"
+    location: "Remote (Australia-based)"
+    categories:
+      growth_product:
+        - "Performance tracking tied to ~AUD 100k/month revenue; legacy site revamp to high-performance web app; Google Ads; UX improvements (~200% user intake); higher conversion."
+      payments_commerce:
+        - "Reduced cart abandonment ~70% by integrating Stripe with Apple Pay, Google Pay, and Alipay."
+      algorithms_performance:
+        - "Cut price lookup latency ~99% with a custom in-memory routing engine using Yen’s K-shortest paths."
+      infrastructure_data:
+        - "Lowered database costs ~75% by migrating from Supabase to Vercel Upstash Redis for fast lookups and multi-carrier routing, supporting new logistics segments."
+
+  - id: universal
+    company: "Universal Innotech Group Company Limited"
+    title: "Junior Software Engineer"
+    period: "Sep 2024 – May 2025"
+    location: "Tsuen Wan, Hong Kong"
+    categories:
+      general_admin:
+        - "Mined and analysed Chinese insurance data from 200+ PDFs; saved 200+ hours."
+        - "Prompt engineering for IIQE exam answer prediction; raised accuracy from 40% to 92%."
+        - "Built a Next.js / Tailwind / React product showcase site; sales increased 100%+."
+        - "Produced interactive PowerPoint course materials for online design courses; enrolment up 80%."
+        - "Documented the AML web application using consistent structure and team standards."
+      software_cloud:
+        - "Improved broker management web app with reusable React components, Cache-Control, SSR; load time down 50%+."
+        - "Refactored B2B SaaS with REST APIs and Neo4j; relationship visualisation; ~30% faster client decisions."
+        - "Deployed Python DB update jobs on AWS (S3, Lambda) with Cypher-driven Neo4j updates."
+      web_dev:
+        - "JavaScript, React, Python on AML SaaS: sanctions/PEP automation; saved HK$10,000+/month in Open Sanction API costs."
+        - "Broker portal: Support Ticket history, Admin Dashboard, SSR, caching — load time down 50%+."
+      data_analysis:
+        - "Literature review on Qwen, BERT, LLaMA, Gemma; summarised in Tableau."
+        - "TF-IDF, PCA, k-means, SVM, anomaly detection, topic modelling on insurance data; 500+ hours saved."
+        - "LLM extraction from 40+ Chinese KYC/CDD documents; turnaround improved by 3+ days."
+        - "Ad-hoc analyses in Python and SQL for business questions."
+
+  - id: ysg_2024
+    company: "Yi Shing Group Ltd. (YSG)"
+    title: "Machine Learning Intern"
+    period: "Jun 2024 – Aug 2024"
+    location: "Science Park, Hong Kong"
+    bullets:
+      - "Real-time fire/smoke detection with YOLOv8 (~90% accuracy); improved to ~95% after Vertex AI migration."
+      - "Full-stack Flask app wired to Vertex AI; CI/CD for deployment."
+      - "Webcam pipeline for live inference; Huawei Cloud ModelArts/OBS evaluation path."
+      - "Integrated cameras with electrical engineering for field tests; load/performance endpoints."
+
+  - id: ysg_2023
+    company: "Yi Shing Group Ltd. (YSG)"
+    title: "Machine Learning Intern"
+    period: "Jun 2023 – Aug 2023"
+    location: "Science Park, Hong Kong"
+    bullets:
+      - "PyTorch/YOLO training on Colab; Roboflow/Kaggle datasets."
+      - "Preprocessing, annotation with bounding boxes; accuracy 50% → 70%."
+      - "Raspberry Pi prototype with fire curtain actuation; Streamlit demo app."
+
+  - id: cityu_helper
+    company: "City University of Hong Kong"
+    title: "Student Helper and Mentor"
+    period: "Feb 2023 – Mar 2024"
+    location: "Kowloon Tong, Hong Kong"
+    bullets:
+      - "Exploratory analysis on 20+ ESG reports (trends, risks, opportunities)."
+      - "hkmrs.org: WordPress, CSS, SEO, UI/UX."
+      - "TensorFlow workshop for 30+ students/faculty at TED CityU."
+      - "Ad-hoc support for Talent and Education Department."
+
+  - id: fori
+    company: "Fori Inc."
+    title: "Technology Resource"
+    period: "May 2021 – Jun 2021"
+    location: "Islamabad, Pakistan"
+    bullets:
+      - "Traffic pattern prototype: Selenium/BeautifulSoup, Google Maps screenshots, HTML/CSS/JS dashboard."
+
+projects:
+  - name: "Blockchain Web3 E-Wallet App"
+    stack: "JavaScript, TypeScript, Next.js"
+    period: "Feb 2025 – Mar 2025"
+    bullets:
+      - "Web3 wallet creation, connect existing wallets, secure transfers."
+
+  - name: "AI Image Classification Model"
+    stack: "Python, PyTorch"
+    period: "Oct 2024 – Nov 2024"
+    bullets:
+      - "ResNet18 and ViT; 98% intra-class / 94% inter-class accuracy."
+
+  - name: "Movie Search and Recommender"
+    stack: "Python, JavaScript, jQuery, Flask"
+    period: "Jun 2024 – Jul 2024"
+    bullets:
+      - "Flask + Pandas pipelines; REST APIs with filters (genre, cast, year) and pagination."
+
+  - name: "Facial Sentiment Classification"
+    stack: "Python, TensorFlow, Keras, OpenCV"
+    period: "Feb 2024 – Mar 2024"
+    bullets:
+      - "CNN for happy/sad; normalization and augmentation."
+
+  - name: "Nutrition Tracker App"
+    stack: "Java, CLI, BlueJ, Visual Paradigm"
+    period: "Feb 2024 – Mar 2024"
+    bullets:
+      - "UML diagrams; Factory, Builder, State, Observer; SOLID principles."
+
+  - name: "Base kernel project"
+    stack: "C, Assembly"
+    period: "Feb 2024 – Mar 2024"
+    bullets:
+      - "Priority scheduling and named pipes in a teaching OS kernel; ~30% efficiency gain on benchmark tasks."
+
+awards_leadership:
+  - "President — Pakistan Students’ Association, CityU (Dec 2023 – May 2024)"
+  - "Managing Director — Student Committee, Jockey Club Humanity Hall (Hall 1) SRO, CityU (Aug 2023 – Aug 2024)"
+  - "CompTIA Security+; Google Cybersecurity Professional Certificate (in progress, Jan 2025 – present)"
+
+skills_taxonomy:
+  languages: ["Python", "Go", "Rust", "SQL", "JavaScript", "TypeScript", "Java", "C", "C++", "Bash", "PowerShell", "HTML", "CSS", "VBA", "Cypher", "Assembly", "UNIX"]
+  frameworks_libs: ["React", "Next.js", "Node.js", "Express", "Vue.js", "FastAPI", "Flask", "Pydantic", "Tailwind CSS", "Snowflake", "Redis", "MongoDB", "PyTorch", "TensorFlow", "OpenCV", "Hugging Face", "Transformers", "Ollama", "ONNX Runtime", "NumPy", "Pandas", "SciPy", "scikit-learn", "Spark", "Seaborn", "Matplotlib", "Selenium", "jQuery"]
+  cloud_devops: ["AWS (S3, Lambda, Redshift, QuickSight)", "GCP", "Azure", "Vercel", "Docker", "Kubernetes", "Git", "CI/CD", "Grafana", "Ansible", "Linux (incl. Red Hat)"]
+  data_bi: ["PostgreSQL", "MySQL", "Neo4j", "Tableau", "Power BI", "MLOps", "LLMOps", "GenAI", "RAG"]
+  tools: ["Jira", "Confluence", "Postman", "ServiceNow", "GitHub", "MCP servers", "Microsoft 365", "Chinese word processing"]
+  soft: ["Scrum", "Agile", "Cross-functional collaboration", "Technical writing", "L3 support", "Solution design", "Storytelling"]

@@ -1,0 +1,86 @@
+% Tailored resume - Quantum Life (Operations Analyst, entry to mid level, Hong Kong SAR)
+% Role: LinkedIn job https://www.linkedin.com/jobs/view/4408373504/
+% Projects section omitted for one-page ops packet; full project list on complete/master-resume.tex.
+% Facts from complete/master-resume.tex and resume-knowledge-base.yaml; 2026 PDF layout and STAR style.
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=10mm]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{0.35em}
+
+\newcommand{\ressection}[1]{%
+  \par\vspace{0.65em}%
+  \noindent{\large\scshape\bfseries #1}\par\nobreak
+  \noindent\rule{\linewidth}{0.4pt}\par\vspace{0.4em}}
+
+\setlist[itemize]{leftmargin=1.2em, topsep=0pt, itemsep=0.12em, parsep=0pt, partopsep=0pt}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{0.2em}
+  \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{#2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-0.3em}
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Ali Syed Ayan}\\[0.35em]
+  \small
+  +852\,97537220 \;\textbar\;
+  \href{mailto:syedayanali28@gmail.com}{syedayanali28@gmail.com} \;\textbar\;
+  \href{https://github.com/syedayanali28}{GitHub} \;\textbar\;
+  \href{https://www.linkedin.com/in/syedayanali/}{LinkedIn}
+\end{center}
+\vspace{-0.2em}
+
+\ressection{Education}
+\resumeSubheading{City University of Hong Kong}{Hong Kong}{B.Sc.\ Computer Science, Minor in Business Intelligence}{Jun 2022 -- Jun 2026}
+\begin{itemize}
+  \item Scholarships: International Student Top Scholarship (HK\$720{,}000 total); Dean's List; Tiger Talent Program, 3 times; coursework: Big Data Analytics, Machine Learning, Databases, Data Structures, Data Science, Software Engineering.
+\end{itemize}
+
+\ressection{Work Experience}
+
+\resumeSubheading{Hong Kong Monetary Authority}{Hong Kong}{Analyst Programmer (IT Division -- Business Enablement \& Software Architecture)}{Jul 2025 -- Present}
+\begin{itemize}
+  \item Owned Tableau and Power BI dashboards with product-owner metric definitions, training, and SOP-style notes so weekly leadership packs became refreshable KPI views instead of static exports.
+  \item Shipped Python RAG with pgvector, SQL vector retrieval, and Grafana on about 10{,}000 BRDR PDFs so daily operations teams stopped blind folder hunts through shared drives.
+  \item Automated firewall reviews with Next.js, JIRA API, and OPA policy-as-code, returning about 30 security staff hours monthly through repeatable LLM-guided checklists.
+\end{itemize}
+
+\resumeSubheading{Jay Cee Ess Global}{Remote (Australia-based)}{Software Engineer}{Aug 2025 -- Present}
+\begin{itemize}
+  \item Revamped legacy funnel and site with performance-first web work and ads tests; user intake about 200\%; reporting stayed tied to about AUD\,100{,}000 monthly revenue context.
+  \item Integrated Stripe with Apple Pay, Google Pay, and Alipay so cart abandonment fell about 70\%.
+  \item Cut quote latency about 99\% with a Redis-backed Yen $k$-shortest-path router and cut database spend about 75\% by moving hot Supabase paths to Upstash for multi-carrier routing.
+\end{itemize}
+
+\resumeSubheading{Universal Innotech Group Company Limited}{Tsuen Wan, Hong Kong}{Junior Software Engineer}{Sep 2024 -- May 2025}
+\begin{itemize}
+  \item Cut recurring report turnaround from about two days to about two hours on 50{,}000+ records per cycle using Python parsing plus LLM-assisted transforms; prep time about 40\% lower.
+  \item Scored 10+ AML AI tools on financial data across accuracy, consistency, latency, and reliability; shipped Neo4j views and REST APIs so client decisions landed about 30\% faster.
+\end{itemize}
+
+\resumeSubheading{Yi Shing Group Ltd.\ (YSG)}{Science Park, Hong Kong}{Machine Learning Intern}{Jun 2024 -- Aug 2024}
+\begin{itemize}
+  \item Shipped a Flask-to-Vertex AI control plane with CI/CD for field pilots; fire and smoke models held about 90 to 95\% accuracy in deployment checks.
+  \item Wired hardware integration tests and load or performance endpoints so hazard-response drills traced camera and sensor faults quickly.
+\end{itemize}
+
+\ressection{Skills and Interests}
+\begin{itemize}
+  \item \textbf{Programming Languages:} Python, SQL, JavaScript, TypeScript, Go, Java, C++, HTML, CSS.
+  \item \textbf{Libraries \& Frameworks:} Pandas, NumPy, Flask, FastAPI, React, Next.js, Tableau, Power BI, PyTorch, scikit-learn.
+  \item \textbf{Software and Tools:} Microsoft 365 Excel, Word, PowerPoint; Git; Jira; Confluence; Grafana; PostgreSQL; Neo4j; Redis; AWS; GCP; Docker; Kubernetes; ServiceNow.
+  \item \textbf{Skills:} Product-owner collaboration; KPI dashboards; process automation; L3 support; technical writing; continuous improvement.
+  \item \textbf{Languages (spoken):} English, fluent; Cantonese and Mandarin, working; Urdu; Hindi.
+\end{itemize}
+
+\end{document}
