@@ -93,7 +93,6 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
   const [jobPostingUrl, setJobPostingUrl] = useState("");
   const [modelPreset, setModelPreset] = useState(DEFAULT_MODEL_ID);
   const [customModelId, setCustomModelId] = useState("");
-  const [queueUrlInput, setQueueUrlInput] = useState("");
   const [queueJobs, setQueueJobs] = useState<QueueJob[]>([]);
   const [loadingQueue, setLoadingQueue] = useState(false);
   const [loadingRoles, setLoadingRoles] = useState(false);
@@ -106,7 +105,6 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
   const [clientError, setClientError] = useState<string | null>(null);
   const selectedModelId =
     modelPreset === MODEL_CUSTOM ? customModelId.trim() || DEFAULT_MODEL_ID : modelPreset;
-  const queueRunning = queueJobs.some((j) => j.status === "running");
 
   const applicationOptions = useMemo(() => {
     return applications.map((a) => ({
@@ -459,8 +457,8 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
     };
   }
 
-  async function addCurrentOrInputToQueue() {
-    const rawUrl = (queueUrlInput.trim() || jobPostingUrl.trim()).trim();
+  async function addCurrentUrlToQueue() {
+    const rawUrl = jobPostingUrl.trim();
     if (!rawUrl) {
       setClientError("Paste a job posting URL first.");
       return;
@@ -490,35 +488,32 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
         modelId: selectedModelId,
       }),
     });
-    const data = (await res.json()) as { error?: string };
+    const data = (await res.json()) as { error?: string; item?: QueueJob };
     if (!res.ok) {
       setClientError(data.error ?? `Queue enqueue failed (${res.status})`);
       return;
     }
-    setQueueUrlInput("");
+    if (data.item) {
+      setQueueJobs((prev) => {
+        const rest = prev.filter((x) => x.id !== data.item!.id);
+        return [data.item!, ...rest];
+      });
+    }
+    setJobPostingUrl("");
     appendLine("meta", `Queued remotely: ${inferred.companySlug}/${inferred.roleSlug}`);
     await refreshRemoteQueue();
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting) return;
     setSubmitting(true);
-    setResult(null);
-    setStreamLines([]);
-    setRedirectingTo(null);
     setClientError(null);
     try {
-      appendLine("meta", "Starting stream...");
-      await runStream({
-        personSlug,
-        companySlug: companySlug.trim(),
-        roleSlug: roleSlug.trim(),
-        jobPostingUrl: jobPostingUrl.trim(),
-        modelId: selectedModelId,
-      });
+      await addCurrentUrlToQueue();
     } catch {
-      setClientError("Network error while starting the agent.");
-      appendLine("error", "Network error while starting the agent.");
+      setClientError("Network error while adding to queue.");
+      appendLine("error", "Network error while adding to queue.");
     } finally {
       setSubmitting(false);
     }
@@ -555,8 +550,8 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
           on the server to run against the checkout next to this app instead.
         </p>
         <p className="mt-2 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-sm">
-          Queue items are stored first, then processed one at a time in FIFO order. When the current
-          run finishes, the next link is promoted automatically even if you leave this page.
+          Every submitted URL is added to queue and processed one-by-one in FIFO order. If no run is
+          active, the first queued link starts immediately. You can keep adding new links anytime.
         </p>
       </section>
 
@@ -658,29 +653,11 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
         </label>
 
         <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-          <p className="text-sm font-medium text-slate-800">Queue multiple job links</p>
+          <p className="text-sm font-medium text-slate-800">Queue status</p>
           <p className="mt-1 text-xs text-slate-600">
-            Paste URLs one by one and click Add. Jobs run sequentially in queue order with the
-            selected person/model snapshot captured at add time.
+            Submit the main Job posting URL field above to enqueue. Queue will continue automatically.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-            <input
-              type="url"
-              value={queueUrlInput}
-              onChange={(e) => setQueueUrlInput(e.target.value)}
-              placeholder="Paste another job URL and click Add to queue"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-sky-500/30 focus:border-sky-300 focus:ring-2"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                void addCurrentOrInputToQueue();
-              }}
-              disabled={!personSlug}
-              className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 hover:border-sky-200 hover:bg-sky-50/60 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Add to queue
-            </button>
             <button
               type="button"
               onClick={() => {
@@ -788,10 +765,10 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
 
         <button
           type="submit"
-          disabled={submitting || queueRunning || !personSlug || people.length === 0 || !selectedModelId}
+          disabled={submitting || !personSlug || people.length === 0 || !selectedModelId}
           className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-sky-900/20 transition hover:from-sky-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitting ? "Running agent…" : `Run Cursor agent (${selectedModelId})`}
+          {submitting ? "Adding to queue…" : `Add URL to queue (${selectedModelId})`}
         </button>
       </form>
 

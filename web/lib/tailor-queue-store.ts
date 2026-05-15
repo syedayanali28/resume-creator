@@ -24,6 +24,8 @@ export type TailorQueueItem = {
   summary?: string | null;
   durationMs?: number | null;
   prUrl?: string | null;
+  mergedAt?: string;
+  mergeError?: string;
   error?: string;
 };
 
@@ -94,6 +96,65 @@ function normalizeModelId(modelId: string): string {
   return m.length > 0 ? m : "composer-2";
 }
 
+function getGitHubToken(): string | null {
+  const token = process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim() || "";
+  return token || null;
+}
+
+function parseGithubPr(prUrl: string): { owner: string; repo: string; pullNumber: number } | null {
+  try {
+    const u = new URL(prUrl);
+    if (u.hostname !== "github.com") return null;
+    const parts = u.pathname.split("/").filter(Boolean);
+    if (parts.length < 4) return null;
+    if (parts[2] !== "pull") return null;
+    const pullNumber = Number(parts[3]);
+    if (!Number.isInteger(pullNumber) || pullNumber <= 0) return null;
+    return { owner: parts[0], repo: parts[1], pullNumber };
+  } catch {
+    return null;
+  }
+}
+
+async function mergePrIfConfigured(prUrl: string): Promise<{ mergedAt?: string; mergeError?: string }> {
+  const token = getGitHubToken();
+  if (!token) {
+    return { mergeError: "Auto-merge skipped: set GITHUB_TOKEN (or GH_TOKEN)." };
+  }
+  const parsed = parseGithubPr(prUrl);
+  if (!parsed) {
+    return { mergeError: "Auto-merge skipped: invalid GitHub PR URL." };
+  }
+
+  const mergeMethod = process.env.CURSOR_CLOUD_AUTO_MERGE_METHOD?.trim() || "squash";
+  const res = await fetch(
+    `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/pulls/${parsed.pullNumber}/merge`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "resume-creator-tailor-queue",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ merge_method: mergeMethod }),
+      cache: "no-store",
+    },
+  );
+
+  if (res.ok) {
+    return { mergedAt: nowIso() };
+  }
+  let message = `GitHub merge failed (${res.status})`;
+  try {
+    const data = (await res.json()) as { message?: string };
+    if (data.message) message = data.message;
+  } catch {
+    // keep fallback
+  }
+  return { mergeError: message };
+}
+
 async function saveUpdatedItem(
   id: string,
   updater: (item: TailorQueueItem) => TailorQueueItem,
@@ -116,6 +177,12 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
     if (run.status === "running") return;
     const result = await run.wait();
     const prUrl = result.git?.branches?.find((x) => x.prUrl)?.prUrl ?? null;
+    const shouldAutoMerge =
+      process.env.CURSOR_CLOUD_AUTO_MERGE_PR?.trim().toLowerCase() !== "false";
+    const mergeResult =
+      result.status === "finished" && prUrl && shouldAutoMerge
+        ? await mergePrIfConfigured(prUrl)
+        : {};
     await saveUpdatedItem(item.id, (curr) => ({
       ...curr,
       status: result.status === "finished" ? "finished" : "error",
@@ -124,6 +191,8 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
       summary: result.result ?? null,
       durationMs: result.durationMs ?? null,
       prUrl,
+      mergedAt: mergeResult.mergedAt,
+      mergeError: mergeResult.mergeError,
       error: result.status === "finished" ? undefined : `Run ended with status: ${result.status}`,
     }));
   } catch (err) {
@@ -272,7 +341,8 @@ export async function enqueueTailorQueueItem(input: {
   items.push(item);
   await writeAll(items);
   await processQueue(input.apiKey);
-  return item;
+  const latest = await readAll();
+  return latest.find((x) => x.id === item.id) ?? item;
 }
 
 export async function markTailorQueueFinishedStatuses(apiKey: string): Promise<void> {
