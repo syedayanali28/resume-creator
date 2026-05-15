@@ -1,0 +1,8 @@
+{
+  "name": "sqlite3",
+  "version": "5.1.7",
+  "description": "Stub sqlite3 for serverless: satisfies @cursor/sdk static import; cloud agents do not use local SQLite.",
+  "main": "./index.js",
+  "license": "MIT",
+  "private": true
+}

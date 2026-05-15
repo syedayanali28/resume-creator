@@ -26,5 +26,10 @@
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@cursor/sdk>sqlite3": "link:./vendor/sqlite3-stub"
+    }
   }
 }
