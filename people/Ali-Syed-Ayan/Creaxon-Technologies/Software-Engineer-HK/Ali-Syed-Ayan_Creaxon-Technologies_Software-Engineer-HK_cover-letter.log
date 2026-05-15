@@ -1,9 +1,12 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.4.12)  4 MAY 2026 00:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.4.12)  15 MAY 2026 12:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.tex
-(Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.tex
+**C:/resume_creator/people/Ali-Syed-Ayan/Creaxon-Technologies/Software-Engineer
+-HK/Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.tex
+
+(C:/resume_creator/people/Ali-Syed-Ayan/Creaxon-Technologies/Software-Engineer-
+HK/Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
 
@@ -248,8 +251,7 @@ kend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count300
 )
-No file Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.au
-x.
+(Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.aux)
 \openout1 = `Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-lett
 er.aux'.
 
@@ -271,6 +273,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
 LaTeX Font Info:    ... okay on input line 14.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 14.
 LaTeX Font Info:    ... okay on input line 14.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -306,12 +309,15 @@ LaTeX Font Info:    ... okay on input line 14.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 14.
+(Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.out)
+(Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-letter.out)
 \@outlinefile=\write3
 \openout3 = `Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover-lett
 er.out'.
 
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 3
 8.
+
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -326,31 +332,24 @@ nc}]
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-
-
-Package rerunfilecheck Warning: File `Ali-Syed-Ayan_Creaxon-Technologies_Softwa
-re-Engineer-HK_cover-letter.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Ali-Syed-Ayan_Creaxon-Technologies_
-Software-Engineer-HK_cover-letter.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
+Package rerunfilecheck Info: File `Ali-Syed-Ayan_Creaxon-Technologies_Software-
+Engineer-HK_cover-letter.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 8721 strings out of 467871
- 137298 string characters out of 5414468
- 556986 words of memory out of 5000000
- 37546 multiletter control sequences out of 15000+600000
+ 8731 strings out of 467871
+ 138548 string characters out of 5414468
+ 557159 words of memory out of 5000000
+ 37548 multiletter control sequences out of 15000+600000
  635140 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,79p,584b,438s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,5n,79p,663b,438s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/l
 mbx10.pfb><C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/lm/lmr10.pfb>
-Output written on Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cover
--letter.pdf (1 page, 69368 bytes).
+Output written on C:\resume_creator\people\Ali-Syed-Ayan\Creaxon-Technologies\S
+oftware-Engineer-HK\Ali-Syed-Ayan_Creaxon-Technologies_Software-Engineer-HK_cov
+er-letter.pdf (1 page, 69369 bytes).
 PDF statistics:
  29 PDF objects out of 1000 (max. 8388607)
  2 named destinations out of 1000 (max. 500000)

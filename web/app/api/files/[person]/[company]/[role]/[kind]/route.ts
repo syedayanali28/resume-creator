@@ -12,7 +12,7 @@ import {
 type Kind = "resume" | "cover-letter";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: {
     params: Promise<{ person: string; company: string; role: string; kind: string }>;
   },
@@ -46,6 +46,9 @@ export async function GET(
   const filename =
     kind === "resume" ? `${stem}_resume.pdf` : `${stem}_cover-letter.pdf`;
   const abs = path.join(roleDir, filename);
+  const query = new URL(request.url).searchParams;
+  const viewMode = query.get("view") === "1";
+  const disposition = viewMode ? "inline" : "attachment";
 
   if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
     const blobUrl = await getBlobPdfUrl(person, company, role, kind);
@@ -63,7 +66,7 @@ export async function GET(
     const safeAsciiName = filename.replace(/[^\x20-\x7E]/g, "_");
     headers.set(
       "Content-Disposition",
-      `attachment; filename="${safeAsciiName.replaceAll('"', "")}"`,
+      `${disposition}; filename="${safeAsciiName.replaceAll('"', "")}"`,
     );
     headers.set("Content-Type", "application/pdf");
     headers.set("Content-Length", String(bytes.byteLength));
@@ -75,7 +78,7 @@ export async function GET(
   const safeAsciiName = filename.replace(/[^\x20-\x7E]/g, "_");
   headers.set(
     "Content-Disposition",
-    `attachment; filename="${safeAsciiName.replaceAll('"', "")}"`,
+    `${disposition}; filename="${safeAsciiName.replaceAll('"', "")}"`,
   );
   headers.set("Content-Type", "application/pdf");
   headers.set("Content-Length", String(buf.length));

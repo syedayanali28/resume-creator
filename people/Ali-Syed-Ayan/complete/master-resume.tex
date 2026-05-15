@@ -13,41 +13,44 @@
 % Hyperlinks: keep \href on email, GitHub, LinkedIn in the header; add \href for any deliverable URL
 % documented here or in g:\My Drive\Syed Ayan Ali Resume 2026.pdf; never invent URLs.
 %
-% Page: A4 (option \texttt{a4paper} on \documentclass).
-% Margins (geometry): \texttt{margin=10mm} on all sides (LEFT = RIGHT = TOP = BOTTOM).
-% To customise, replace that line e.g.
-%   \usepackage[left=12mm,right=12mm,top=10mm,bottom=12mm]{geometry}
-%   \usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
+% Page: A4 (\texttt{a4paper}). Shared preamble (geometry, lists, macros):
+% .cursor/skills/resume-master-latex-format/SKILL.md
 \documentclass[10pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[margin=10mm]{geometry}
+\usepackage[margin=4mm]{geometry}
 \usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue]{hyperref}
 \usepackage{parskip}
-\setlength{\parskip}{0.35em}
+\setlength{\parskip}{0.18em}
+
+\setlist[itemize]{leftmargin=1.15em, topsep=0pt, itemsep=0.05em, parsep=0pt, partopsep=0pt}
 
 \newcommand{\ressection}[1]{%
-  \par\vspace{0.65em}%
+  \vspace{0.8em}%
   \noindent{\large\scshape\bfseries #1}\par\nobreak
-  \noindent\rule{\linewidth}{0.4pt}\par\vspace{0.4em}}
+  \vspace{-\parskip}%
+  \vspace{-\parskip}%
+  \vspace{-\parskip}%
+  \vspace{-\parskip}%
+  \noindent\rule{\linewidth}{0.1pt}\par\nobreak
+  \vspace{-\parskip}%
+}
 
-\setlist[itemize]{leftmargin=1.2em, topsep=0pt, itemsep=0.12em, parsep=0pt, partopsep=0pt}
-
-\newcommand{\resumeSubheading}[4]{
-  \vspace{0.2em}
+\newcommand{\resumeSubheading}[4]{%
+  \vspace{0.6em}%
   \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
     \textbf{#1} & \textbf{#2} \\
     \textit{\small #3} & \textit{\small #4} \\
-  \end{tabular*}\vspace{-0.3em}
-}
+  \end{tabular*}\vspace{0.32em}}
 
-\newcommand{\resumeHeading}[2]{
-  \vspace{0.15em}
-  \noindent\textbf{\small #1}\hfill\textit{\small #2}\par\vspace{0.1em}
-}
+\newcommand{\projectlink}[2]{\href{#1}{\textbf{#2}}}
+
+\newcommand{\resumeHeading}[2]{%
+  \vspace{0.6em}%
+  \noindent\textbf{\small #1}\hfill\textit{\small #2}\par\vspace{0.28em}}
 
 \begin{document}
 

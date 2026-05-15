@@ -32,6 +32,18 @@ export default async function MainLayout({
             >
               Application desk
             </Link>
+            <Link
+              href="/cursor-tailor"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900"
+            >
+              Cursor tailor
+            </Link>
+            <Link
+              href="/runs"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900"
+            >
+              My active runs
+            </Link>
             <span className="hidden text-xs font-medium uppercase tracking-wider text-slate-400 sm:inline">
               People → Company → Role
             </span>

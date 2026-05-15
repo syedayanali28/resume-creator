@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { ApplicationStatus } from "@/lib/application-status";
 import { statusBadgeClass, statusLabel } from "@/lib/application-status";
 import type { RoleApplicationRow } from "@/lib/scan-people";
@@ -11,6 +12,15 @@ function fileUrl(
   kind: "resume" | "cover-letter",
 ) {
   return `/api/files/${encodeURIComponent(person)}/${encodeURIComponent(company)}/${encodeURIComponent(role)}/${kind}`;
+}
+
+function viewerUrl(
+  person: string,
+  company: string,
+  role: string,
+  kind: "resume" | "cover-letter",
+) {
+  return `/person/${encodeURIComponent(person)}/pdf?company=${encodeURIComponent(company)}&role=${encodeURIComponent(role)}&kind=${kind}`;
 }
 
 function fmtDate(iso: string | null): string {
@@ -27,9 +37,11 @@ function fmtDate(iso: string | null): string {
 export function RoleTable({
   personSlug,
   rows,
+  highlightKey,
 }: Readonly<{
   personSlug: string;
   rows: RoleApplicationRow[];
+  highlightKey?: string;
 }>) {
   if (rows.length === 0) {
     return (
@@ -59,6 +71,7 @@ export function RoleTable({
             {rows.map((row) => {
               const key = `${row.companySlug}/${row.roleSlug}`;
               const open = Boolean(row.link);
+              const highlighted = highlightKey === key;
               return (
                 <tr
                   key={key}
@@ -68,9 +81,11 @@ export function RoleTable({
                     }
                   }}
                   className={
-                    open
-                      ? "cursor-pointer transition-colors hover:bg-sky-50/50"
-                      : "cursor-default bg-white"
+                    `${highlighted ? "bg-emerald-50/80 ring-1 ring-emerald-200" : ""} ${
+                      open
+                        ? "cursor-pointer transition-colors hover:bg-sky-50/50"
+                        : "cursor-default bg-white"
+                    }`
                   }
                   title={
                     open
@@ -107,28 +122,26 @@ export function RoleTable({
                   </td>
                   <td className="px-4 py-3 text-right">
                     {row.hasResumePdf ? (
-                      <a
-                        href={fileUrl(personSlug, row.companySlug, row.roleSlug, "resume")}
-                        download
+                      <Link
+                        href={viewerUrl(personSlug, row.companySlug, row.roleSlug, "resume")}
                         className="inline-flex rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-800 shadow-sm hover:border-sky-200 hover:bg-sky-50/80"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        PDF
-                      </a>
+                        View
+                      </Link>
                     ) : (
                       <span className="text-xs text-slate-400">—</span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
                     {row.hasCoverPdf ? (
-                      <a
-                        href={fileUrl(personSlug, row.companySlug, row.roleSlug, "cover-letter")}
-                        download
+                      <Link
+                        href={viewerUrl(personSlug, row.companySlug, row.roleSlug, "cover-letter")}
                         className="inline-flex rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-800 shadow-sm hover:border-sky-200 hover:bg-sky-50/80"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        PDF
-                      </a>
+                        View
+                      </Link>
                     ) : (
                       <span className="text-xs text-slate-400">—</span>
                     )}

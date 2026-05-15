@@ -1,0 +1,120 @@
+% Master resume — Rajan Fauz. people/Rajan-Fauz/complete/
+% Compile: python scripts/compile_complete_master.py --person Rajan-Fauz
+%
+% Page: A4 (\texttt{a4paper}). Shared preamble: .cursor/skills/resume-master-latex-format/SKILL.md
+\documentclass[9pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=4mm]{geometry}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{0.18em}
+
+\setlist[itemize]{leftmargin=1.15em, topsep=0pt, itemsep=0.05em, parsep=0pt, partopsep=0pt}
+
+\newcommand{\ressection}[1]{%
+  \vspace{0.8em}%
+  \noindent{\large\scshape\bfseries #1}\par\nobreak
+  \vspace{-\parskip}%
+  \vspace{-\parskip}%
+  \vspace{-\parskip}%  
+  \vspace{-\parskip}%
+  \noindent\rule{\linewidth}{0.1pt}\par\nobreak
+  \vspace{-\parskip}%
+}
+
+\newcommand{\resumeSubheading}[4]{%
+  \vspace{0.6em}%
+  \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{#2} \\
+    \textit{\small #3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{0.32em}}
+
+% GitHub project title: bold only (hyperref-safe).
+\newcommand{\projectlink}[2]{\href{#1}{\textbf{#2}}}
+
+\newcommand{\resumeHeading}[2]{%
+  \vspace{0.6em}%
+  \noindent\textbf{\small #1}\hfill\textit{\small #2}\par\vspace{0.28em}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries RAJAN Fauz}\\[0.35em]
+  \small
+  (852) 56919221 \;\textbar\;
+  \href{mailto:fauzrajan@gmail.com}{fauzrajan@gmail.com} \;\textbar\;
+  \href{https://www.linkedin.com/in/fauzrajan}{LinkedIn} \;\textbar\;
+  \href{https://github.com/FauzRajan}{Github}
+\end{center}
+\vspace{-0.15em}
+
+\ressection{Education}
+
+\resumeSubheading{City University of Hong Kong}{Hong Kong}{BSc Data Science \& BBA Finance (Minor: Business Economics)}{Anticipated Jun 2027}
+\begin{itemize}
+  \item CGPA: 3.52 \;\textbar\; Dean's List (2023) \;\textbar\; CityUHK International Student Scholarship and Diversity Grant
+  \item Relevant Coursework (Selected): Convex Optimisation, Advanced Statistics, Linear Algebra, Derivatives \& Risk Mgmt, Security Analysis \& Portfolio Mgmt, Machine Learning, Financial Data Analytics
+\end{itemize}
+
+\ressection{Work Experience}
+
+\resumeSubheading{Natixis Corporate \& Investment Banking}{Hong Kong}{Intern, Finance \& Market Risk}{Jan 2026 - Present}
+\begin{itemize}
+  \item Drive the digital transformation of month-end reporting and reconciliation frameworks, enhancing the efficiency and accuracy of regulatory financial submissions.
+  \item Develop and deploy automated Alteryx workflows to ingest, parse, and validate complex financial ledgers, replacing manual Excel-based processes and reducing operational risk.
+  \item Collaborate with controllers to identify process bottlenecks and implement data-driven solutions that streamline multi-entity financial data consolidation for faster reporting cycles and clearer audit trails.
+  \item Analyse daily traded risk exposures and Value-at-Risk (VaR) metrics for diverse asset classes, ensuring all trading activities remain within established risk limits and regulatory boundaries.
+  \item Streamline daily traded risk reporting by automating data extraction and validation processes, improving the accuracy and delivery speed of risk exposure metrics for senior management.
+\end{itemize}
+
+\resumeSubheading{Turoid AI}{Hong Kong}{Financial AI Engineering Intern}{Sep 2025 - Dec 2025}
+\begin{itemize}
+  \item Built a full-stack wealth management platform for family offices and HNW clients, consolidating multi-custody portfolios from 40+ banks into a single dashboard and powering an automated landing page that refreshes daily with market news, holdings, upcoming events, and AI-driven portfolio recommendations.
+  \item Designed and implemented valuation, scenario-analysis, and stress-testing tools for equity-linked structured products (e.g.\ ELNs, FCNs), combining a Python analytics backend with web frontends and improving portfolio risk calculations by 15\%.
+  \item Automated ingestion and parsing of multi-custody bank statements and trade advices into a unified data model, cutting manual reconciliation time by 70\% and enabling scalable portfolio analytics, risk monitoring, and reporting.
+\end{itemize}
+
+\resumeSubheading{CityUHK -- Office of Vice President (Research)}{Hong Kong}{Data \& Analytics Intern (Part-time)}{Aug 2024 - Dec 2025}
+\begin{itemize}
+  \item Automated data collection and cleaning using Python web crawlers, ensuring data integrity and cutting manual benchmarking effort by 40\% to drive process improvements.
+  \item Conducted advanced statistical analyses and built 5+ Tableau dashboards to deliver data-driven insights, supporting decision making and financial oversight for university resource allocation.
+\end{itemize}
+
+\resumeSubheading{Langya AI}{Hong Kong}{Quantitative Portfolio Assistant Intern}{Jun - Sep 2025}
+\begin{itemize}
+  \item Developed a multi-factor stock price forecasting model leveraging historical stock data, macroeconomic indicators, and company fundamental performance, utilising an ensemble of machine learning models to predict 10-day future stock prices with an aim for increased accuracy over single models.
+  \item Built a comprehensive stock database in collaboration with senior analysts, improving data integrity and model training accessibility by 25\%.
+  \item Supported daily portfolio oversight through quantitative and qualitative analyses by monitoring performance metrics, conducting risk analysis, and leveraging deep learning insights to inform forecasting, ensuring alignment with business goals.
+\end{itemize}
+
+\ressection{Projects}
+\begin{itemize}
+  \item \projectlink{https://github.com/FauzRajan/Quantitative_Portfolio_Optimisation}{Quantitative Portfolio Management System}: Built an end-to-end Python system for portfolio optimisation, leveraging quantitative models (Markowitz, Black-Litterman) to recommend risk-adjusted asset allocations. The project integrates robust risk analysis, historical back testing, and dynamic data visualisation, showcasing a full-stack approach to financial analytics.
+  \item \projectlink{https://github.com/FauzRajan/Financial_Market_Prediction_Sentiment_Analysis}{Financial Market Sentiment Analysis System}: Developed a Python-based machine learning pipeline to forecast daily stock returns by integrating a deep learning sentiment analysis model with technical indicators. The model was validated using a time-series cross-validation approach.
+\end{itemize}
+
+\ressection{Leadership \& Achievements}
+\begin{itemize}
+  \item \textbf{Internal Vice President -- Pakistani Student Association CityU (2025 -- 2026):} Launched 3 support initiatives and spearheaded 5+ events for 200+ students, driving a 50\% increase in engagement and a 70\% boost in regional applications.
+  \item \textbf{The FAN Awards -- Outstanding Community Service Awards for Non-Local Students 2024:} Recognised for leading and participating in 15+ volunteer projects impacting 500+ Hong Kong residents.
+  \item \textbf{Cedar Leadership Award 2023:} Recognised for founding a peer tutoring program and spearheading the college's national science Olympiad.
+\end{itemize}
+
+\ressection{Technical Skills}
+\begin{itemize}
+  \item \textbf{Programming Languages:} Python (Pandas, NumPy, BeautifulSoup, Scrapy, Selenium, Scikit-Learn), C++, SQL
+  \item \textbf{Financial \& Data Tools:} Alteryx, Tableau, Microsoft Excel, PowerPoint, Financial Modelling, Statistical Analysis, Hugging Face, OpenAI API
+\end{itemize}
+
+\ressection{Additional Information}
+\begin{itemize}
+  \item \textbf{Certifications:} Web Scraping in Python (LinkedIn Learning, 2024), REST APIs (LinkedIn Learning, 2024), \textbf{Bloomberg Finance Fundamentals} (Bloomberg, 2026), Introduction to Risk Management (LinkedIn Learning, 2026)
+  \item \textbf{Languages:} Native English \& Urdu
+  \item \textbf{Hobbies:} Hiking, Photography, Board games, Cooking, Reading
+\end{itemize}
+
+\end{document}

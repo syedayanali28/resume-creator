@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # Zhao Yanbo tailored resume — pointer
 
-**Do not duplicate rules here.** All instructions (one-page tailored vs master, headings, bullets, pagination, **hyperlinks**, compile commands) are in:
+**Do not duplicate rules here.** All instructions (tailored length, headings, **≥4 bullets per Work Experience block for Zhao**, pagination, **hyperlinks**, compile commands) are in:
 
 **`.cursor/rules/resume-tailored-job-packages.mdc`**
 

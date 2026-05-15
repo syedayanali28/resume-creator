@@ -24,7 +24,7 @@ Each **role** folder must also include **`job link.txt`** (exact name, including
 | Purpose | Path |
 |--------|------|
 | Master (may be multi-page) | `people/Zhao-Yanbo/complete/master-resume.tex` |
-| Tailored resume (target 1 page) | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.tex` |
+| Tailored resume | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.tex` (target **one page when feasible**; **≥4 bullets per Work Experience role** is mandatory, so **multi-page** is acceptable when needed) |
 | Cover letter | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_cover-letter.tex` |
 | Job posting URL (plain text) | `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/job link.txt` (line 1 = URL) |
 
@@ -35,7 +35,7 @@ python scripts/compile_complete_master.py --person Zhao-Yanbo
 python scripts/generate_job_package.py --person Zhao-Yanbo --company HSBC --role Analyst-GFX-Middle-Office --job-url "<posting URL>"
 ```
 
-Check page count in `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.log` (`Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.pdf (1 page, ...)`).
+Check page count in `people/Zhao-Yanbo/<CompanySlug>/<RoleSlug>/Zhao-Yanbo_<CompanySlug>_<RoleSlug>_resume.log` (expect `1 page` when feasible; **multiple pages** are acceptable when every Work Experience block keeps **≥4** bullets).
 
 ## Exception: `people/Ali-Syed-Ayan/**/*_resume.tex`
 
@@ -55,7 +55,7 @@ When the user supplies a **job posting URL** (or full pasted JD) for Ali’s tai
 2. **Map to the master:** In `people/Ali-Syed-Ayan/complete/master-resume.tex` and `complete/resume-knowledge-base.yaml`, find (a) **work bullets** that match each keyword or close synonyms, (b) **Projects** whose stack or outcome matches posting terms, (c) **Skills** lines or tokens that **exactly or closely** match those keywords.
 3. **Build the tailored resume** by **including** those bullets, projects, and skill tokens (still **no invented employers, dates, or metrics**). Prefer **coverage of the posting** over arbitrary caps **while the PDF remains exactly one page**.
 4. **Page fill:** The tailored PDF should **read as a full page**, not a short column with a large empty block at the bottom. If `pdflatex` leaves **noticeable whitespace** on page 1, add more master-backed, posting-relevant lines (work bullets, projects, or skills) until the layout looks balanced. Do **not** cheat with extra vertical glue or sub-template margins.
-5. **Bullet count caps (3 for the two most recent roles, ≥2 for others)** apply to **Zhao Yanbo** and to **Ali only as a pagination fallback:** use them **after** `pdflatex` shows **more than one page**, when trimming alongside **2–3** one-liners and **weakest-bullet → one-liner** swaps per the workflow below. Until length forces trims, Ali’s **default priority** is **keyword and JD alignment**, not fixed bullet counts. If LinkedIn hides text behind **Show more**, expand it or ask the user to paste the full description before finalizing keywords.
+5. **Zhao Yanbo:** every `Work Experience` block carries **at least 4** bullets sourced from the master; **do not** trim a Zhao block below **4** bullets for pagination unless the user explicitly approves. **Ali Syed Ayan:** **Bullet count caps (at most 3 for each of the two most recent roles, ≥2 for other retained roles)** apply **only as a pagination fallback** after `pdflatex` shows **more than one page**, when trimming alongside **2–3** one-liners and **weakest-bullet → one-liner** swaps per the workflow below. Until length forces trims, Ali’s **default priority** is **keyword and JD alignment**, not fixed bullet counts. If LinkedIn hides text behind **Show more**, expand it or ask the user to paste the full description before finalizing keywords.
 
 **Unchanged for Ali:** STAR shape, **two-line bullets must either fill both wrapped lines with substance or collapse to a single one-liner** (no half-empty second line), punctuation (no em dash, light parentheses, no `~` / `$\sim$` for “about”), hyperlink rules, and the **pagination** sequence (**2–3** one-liners, then **weakest-bullet → one-liner** swap; optional oldest-role omission only with user confirmation).
 
@@ -64,7 +64,7 @@ When the user supplies a **job posting URL** (or full pasted JD) for Ali’s tai
 ## Scope
 
 - **`people/<Person>/complete/master-resume.tex`**: May exceed **one page** when content requires it.
-- **`people/<Person>/<CompanySlug>/<RoleSlug>/<Person>_<CompanySlug>_<RoleSlug>_resume.tex`**: Must compile to **exactly one PDF page** whenever feasible.
+- **`people/<Person>/<CompanySlug>/<RoleSlug>/<Person>_<CompanySlug>_<RoleSlug>_resume.tex`**: Target **exactly one PDF page** whenever feasible. **Zhao Yanbo** exception: each **Work Experience** block must keep **at least 4** bullets; if that forces **multiple pages**, accept the extra pages rather than dropping below **4** without user approval.
 
 ## Punctuation, typography, and STAR bullets
 
@@ -114,11 +114,11 @@ When editing `people/Ali-Syed-Ayan/<CompanySlug>/<RoleSlug>/*_cover-letter.tex`:
 ## Layout
 
 - **Ali Syed Ayan:** Start from **`people/Ali-Syed-Ayan/complete/template-resume.tex`** for `\documentclass`, `\usepackage` (including **`geometry`**), `\setlength{\parskip}`, `\ressection`, `\resumeSubheading`, `\resumeHeading`, **`itemize`** (`enumitem`), and header block structure. Pull factual bullet content from the master and YAML, not the master’s preamble.
-- **Everyone else (e.g. Zhao Yanbo):** Start from the **same** preamble as that person’s **`complete/master-resume.tex`**: `\documentclass`, `\usepackage` lines (including **`geometry`** margins), `\setlength{\parskip}`, `\ressection`, `\resumeSubheading`, `\resumeHeading`, and **`itemize`** (`enumitem`) settings.
+- **Everyone else (e.g. Zhao Yanbo, Rajan Fauz):** All **`people/<Person>/complete/master-resume.tex`** files share one **canonical preamble** (document class, **`geometry`**, **`hyperref`** link colours, `\parskip`, list spacing, `\ressection`, `\resumeSubheading`, `\projectlink`, `\resumeHeading`). Source of truth: **`.cursor/skills/resume-master-latex-format/SKILL.md`**. When creating a new person, copy that block verbatim; keep person-specific `%` comments only above `\documentclass`.
 
 ### Pagination vs completeness
 
-- **Do not** tighten margins, `\parskip`, list `itemsep`, or macro vertical skips relative to that person’s **reference preamble** (`complete/master-resume.tex` for Zhao-style packets; `people/Ali-Syed-Ayan/complete/template-resume.tex` for Ali Syed Ayan) just to force one page.
+- **Do not** tighten margins, `\parskip`, list `itemsep`, or macro vertical skips relative to the **reference preamble** (shared **resume-master-latex-format** skill for any `complete/master-resume.tex`; `people/Ali-Syed-Ayan/complete/template-resume.tex` for Ali tailored one-pagers) just to force one page.
 - If **one page is impossible** while keeping **every** master `Work Experience` entry **and** an unchanged reference preamble, **stop** and tell the user. Practical outs (pick one after user confirms):
   - Omit the **oldest** role **only** when the user explicitly allows it for that packet, **or**
   - Accept **two pages** for that tailored packet, **or**
@@ -144,10 +144,8 @@ Do **not** rename or merge these sections.
 
 ### Bullet counts (Zhao Yanbo; pagination fallback for Ali)
 
-- **Two most recent roles** (first two blocks under Work Experience): **exactly 3** bullets each.
-- **Every other role**: **at least 2** bullets each.
-
-**Ali Syed Ayan:** Do **not** treat the above counts as the default. Follow **Ali Syed Ayan: job posting, keywords, and bullet selection** in the Exception block. Apply **3 / ≥2** caps only when trimming a **multi-page** Ali tailored PDF, together with the **Workflow after edits** steps below.
+- **Zhao Yanbo:** **Every** `Work Experience` block: **at least 4** bullets each, sourced from `complete/master-resume.tex` facts (split or rephrase; do not invent employers, dates, or metrics). Do **not** reduce a block below **4** bullets for length unless the user explicitly approves. Prefer **one page** when it fits; otherwise allow **multi-page** tailored PDFs.
+- **Ali Syed Ayan:** Do **not** treat fixed counts as the default. Follow **Ali Syed Ayan: job posting, keywords, and bullet selection** in the Exception block. Apply **at most 3** bullets for each of the **two** most recent roles and **at least 2** for other retained roles **only** when trimming a **multi-page** Ali tailored PDF, together with the **Workflow after edits** steps below.
 
 ### Bullet shape
 
@@ -175,9 +173,9 @@ Keep labels identical; body text should match the master unless the user request
 
 ## Workflow after edits
 
-Compile via `scripts/generate_job_package.py --person … --company … --role …` (or the project `pdflatex` helper). When the user supplies a posting URL for a packet, keep **`job link.txt`** in the **role** folder updated (line 1 = URL) or pass **`--job-url "<URL>"`** to the script. If the PDF is **longer than one page**, paginate in this order (still **no** margin or list-spacing cheats):
+Compile via `scripts/generate_job_package.py --person … --company … --role …` (or the project `pdflatex` helper). When the user supplies a posting URL for a packet, keep **`job link.txt`** in the **role** folder updated (line 1 = URL) or pass **`--job-url "<URL>"`** to the script. If the PDF is **longer than one page**, paginate in this order (still **no** margin or list-spacing cheats). **Zhao Yanbo:** steps 1–2 may tighten prose inside bullets or shorten extracurricular lines, but **never** drop a `Work Experience` block below **4** bullets without explicit user approval.
 
 1. **Introduce 2-3 one-liner bullets** across the resume: pick bullets that are long or wrap badly (often **older / less posting-relevant** `Work Experience` roles, or **Extracurricular** bullets) and rewrite each as a **single dense line** in the PDF. Spread these **2-3** edits across sections so you do not strip only one block unless one pass is enough.
-2. If the PDF is **still** longer than one page after recompiling, treat that as **consistently** over length: in the **least posting-relevant** area (weakest bullet in the oldest or farthest-from-role `Work Experience` block, or a peripheral Education/Extracurricular bullet), **cut that bullet’s verbose text** and **replace the same `\item` slot** with **one** **one-liner** that keeps the strongest verifiable fact or keyword. Repeat sparingly toward more relevant bullets, without dropping below **minimum bullet counts** unless the user approved an exception (e.g. omitting the oldest role). **For Ali Syed Ayan**, once length pressure is clear, you may also enforce **at most 3** bullets for each of the **two** most recent roles and **at least 2** for other retained roles **as part of the same trimming pass**, after keyword-rich bullets have been tried first.
+2. If the PDF is **still** longer than one page after recompiling, treat that as **consistently** over length: in the **least posting-relevant** area (weakest bullet in the oldest or farthest-from-role `Work Experience` block, or a peripheral Education/Extracurricular bullet), **cut that bullet’s verbose text** and **replace the same `\item` slot** with **one** **one-liner** that keeps the strongest verifiable fact or keyword. Repeat sparingly toward more relevant bullets, without dropping below **minimum bullet counts** (**for Zhao Yanbo: at least 4 bullets per retained Work Experience block**) unless the user approved an exception (e.g. omitting the oldest role). **For Ali Syed Ayan**, once length pressure is clear, you may also enforce **at most 3** bullets for each of the **two** most recent roles and **at least 2** for other retained roles **as part of the same trimming pass**, after keyword-rich bullets have been tried first.
 
-Stop when the tailored PDF is **exactly one page** (verify in the `.log` “Output written … (1 page …)” line).
+Stop when the tailored PDF meets the person’s length target: **Ali Syed Ayan** and others default to **exactly one page** (verify in the `.log` “Output written … (1 page …)” line). **Zhao Yanbo:** prefer **one page** when it fits **≥4** bullets per `Work Experience` block; if not, stop after meeting the **≥4 bullets per block** rule even when the `.log` shows **2 pages** or more.

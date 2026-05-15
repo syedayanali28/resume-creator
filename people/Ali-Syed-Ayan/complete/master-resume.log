@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.4.12)  3 MAY 2026 21:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.4.12)  14 MAY 2026 19:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -179,6 +179,7 @@ File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
+Package hyperref Info: Option `colorlinks' set `true' on input line 4066.
 Package hyperref Info: Hyper figures OFF on input line 4195.
 Package hyperref Info: Link nesting OFF on input line 4200.
 Package hyperref Info: Hyper index ON on input line 4203.
@@ -209,7 +210,7 @@ Package hyperref Info: Hyper figures OFF on input line 6078.
 Package hyperref Info: Link nesting OFF on input line 6083.
 Package hyperref Info: Hyper index ON on input line 6086.
 Package hyperref Info: backreferencing OFF on input line 6093.
-Package hyperref Info: Link coloring OFF on input line 6098.
+Package hyperref Info: Link coloring ON on input line 6096.
 Package hyperref Info: Link coloring with OCG OFF on input line 6103.
 Package hyperref Info: PDF/A mode OFF on input line 6108.
 \Hy@abspage=\count295
@@ -237,7 +238,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (C:\Program Files\MiKTeX\tex/latex/parskip\parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 50
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 55
 .
 
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmr.fd
@@ -250,24 +251,24 @@ File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 ) (master-resume.aux)
 \openout1 = `master-resume.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -277,15 +278,15 @@ LaTeX Font Info:    ... okay on input line 50.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(28.45274pt, 540.60239pt, 28.45274pt)
-* v-part:(T,H,B)=(28.45274pt, 788.14136pt, 28.45274pt)
+* h-part:(L,W,R)=(11.38109pt, 574.7457pt, 11.38109pt)
+* v-part:(T,H,B)=(11.38109pt, 822.28467pt, 11.38109pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
-* \textwidth=540.60239pt
-* \textheight=788.14136pt
-* \oddsidemargin=-43.81725pt
-* \evensidemargin=-43.81725pt
-* \topmargin=-80.81725pt
+* \textwidth=574.7457pt
+* \textheight=822.28467pt
+* \oddsidemargin=-60.8889pt
+* \evensidemargin=-60.8889pt
+* \topmargin=-97.8889pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
@@ -303,67 +304,92 @@ LaTeX Font Info:    ... okay on input line 50.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 50.
-(master-resume.out) (master-resume.out)
+
+(C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.
+sty
+Package: color 2025/01/14 v1.3e Standard LaTeX Color (DPC)
+
+(C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\co
+lor.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+
+(C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pd
+ftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+
+(C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\sup
+p-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count301
+\scratchdimen=\dimen162
+\scratchbox=\box54
+\nofMPsegments=\count302
+\nofMParguments=\count303
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count304
+\MPscratchDim=\dimen163
+\MPnumerator=\count305
+\makeMPintoPDFobject=\count306
+\everyMPtoPDFconversion=\toks23
+))
+(C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathco
+lor.ltx))
+Package hyperref Info: Link coloring ON on input line 55.
+ (master-resume.out) (master-resume.out)
 \@outlinefile=\write3
 \openout3 = `master-resume.out'.
 
 
 
 LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
-(Font)              using `T1/lmr/bx/n' instead on input line 63.
+(Font)              using `T1/lmr/bx/n' instead on input line 68.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6
-4.
+9.
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
-4.
+9.
 
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-64.
+69.
 
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-64.
+69.
 
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 64.
+(Font)              <10> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 64.
+(Font)              <7> on input line 69.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 64.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 6
-6.
+(Font)              <5> on input line 69.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 7
+1.
 
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 8
+2.
 
- []
-
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 7
-7.
 (C:\Users\Syed Ayan Ali\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 109--110
-
+Overfull \hbox (21.98245pt too wide) in paragraph at lines 134--135
+[]\T1/lmr/m/n/10 Built AML check-ing and PEP au-toma-tion in JavaScript, Re-act
+, and Python; re-duced Open Sanc-tion API spend by HK$10,000+/month. 
  []
 
 [1
@@ -374,7 +400,7 @@ ers/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{C
 nc}{C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-
 mathsy.enc}{C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/enc/dvip
 s/lm/lm-mathit.enc}]
-Overfull \hbox (55.85558pt too wide) in paragraph at lines 173--174
+Overfull \hbox (21.21223pt too wide) in paragraph at lines 178--179
 []\T1/lmr/m/n/10 Prototyped real-time traf-fic pat-tern anal-y-sis with Se-le-n
 ium and Beau-ti-ful-Soup (Google Maps screen-shots) and a HTML/CSS/JavaScript
  []
@@ -393,13 +419,13 @@ Package rerunfilecheck Info: File `master-resume.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 8887 strings out of 467871
- 140248 string characters out of 5414468
- 571054 words of memory out of 5000000
- 37665 multiletter control sequences out of 15000+600000
+ 9440 strings out of 467871
+ 148303 string characters out of 5414468
+ 584171 words of memory out of 5000000
+ 38201 multiletter control sequences out of 15000+600000
  675487 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,7n,79p,582b,538s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,582b,547s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/l
 mbx10.pfb><C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/lm/lmbx12.pfb><C:/Users/Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/t
@@ -412,7 +438,7 @@ ppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri9.pfb><C:/Users/Syed Aya
 n Ali/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/
 Syed Ayan Ali/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
 Output written on C:\resume_creator\people\Ali-Syed-Ayan\complete\master-resume
-.pdf (3 pages, 248724 bytes).
+.pdf (3 pages, 248610 bytes).
 PDF statistics:
  84 PDF objects out of 1000 (max. 8388607)
  4 named destinations out of 1000 (max. 500000)

@@ -1,9 +1,12 @@
 """
 Compile people/<Person>/complete/master-resume.tex → master-resume.pdf (general-purpose CV).
 
+Shared LaTeX preamble for all masters: .cursor/skills/resume-master-latex-format/SKILL.md
+
 Usage:
   python compile_complete_master.py --person Ali-Syed-Ayan
   python compile_complete_master.py --person Zhao-Yanbo
+  python compile_complete_master.py --person Rajan-Fauz
 """
 from __future__ import annotations
 

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPersonDashboard } from "@/lib/scan-people";
 import { RoleTable } from "./role-table";
+import { TailorRunStatus } from "./tailor-run-status";
 
 export const dynamic = "force-dynamic";
 
@@ -27,10 +28,13 @@ export async function generateMetadata({
 
 export default async function PersonPage({
   params,
+  searchParams,
 }: Readonly<{
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ company?: string; role?: string }>;
 }>) {
   const { slug } = await params;
+  const qs = await searchParams;
   const decoded = decodeURIComponent(slug);
   const dashboard = await getPersonDashboard(decoded);
   if (!dashboard) {
@@ -39,6 +43,10 @@ export default async function PersonPage({
 
   const applied = dashboard.rows.filter((r) => r.appliedAt).length;
   const offers = dashboard.rows.filter((r) => r.status === "offer" || r.status === "accepted").length;
+  const highlightKey =
+    typeof qs.company === "string" && typeof qs.role === "string" && qs.company && qs.role
+      ? `${qs.company}/${qs.role}`
+      : undefined;
 
   return (
     <div className="space-y-8">
@@ -81,7 +89,9 @@ export default async function PersonPage({
         </p>
       </section>
 
-      <RoleTable personSlug={dashboard.slug} rows={dashboard.rows} />
+      <TailorRunStatus personSlug={dashboard.slug} />
+
+      <RoleTable personSlug={dashboard.slug} rows={dashboard.rows} highlightKey={highlightKey} />
     </div>
   );
 }
