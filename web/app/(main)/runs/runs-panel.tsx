@@ -12,6 +12,8 @@ type QueueItem = {
   status: "queued" | "running" | "finished" | "error";
   runId?: string;
   prUrl?: string | null;
+  mergedAt?: string;
+  mergeError?: string;
   error?: string;
   updatedAt?: string;
 };
@@ -119,6 +121,7 @@ export function ActiveRunsPanel() {
                 <th className="px-4 py-3">Packet</th>
                 <th className="px-4 py-3">Model</th>
                 <th className="px-4 py-3">Updated</th>
+                <th className="px-4 py-3">Merge</th>
                 <th className="px-4 py-3">Links</th>
                 <th className="px-4 py-3">Run</th>
               </tr>
@@ -126,7 +129,7 @@ export function ActiveRunsPanel() {
             <tbody className="divide-y divide-slate-100">
               {items.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-8 text-center text-sm text-slate-500" colSpan={7}>
+                  <td className="px-4 py-8 text-center text-sm text-slate-500" colSpan={8}>
                     No runs yet.
                   </td>
                 </tr>
@@ -145,6 +148,33 @@ export function ActiveRunsPanel() {
                     <td className="px-4 py-3">{item.modelId}</td>
                     <td className="px-4 py-3">
                       {item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {item.status !== "finished" ? (
+                        <span className="text-slate-500">—</span>
+                      ) : item.prUrl ? (
+                        item.mergedAt ? (
+                          <div className="text-xs">
+                            <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">
+                              Merged
+                            </span>
+                            <p className="mt-1 text-slate-500">
+                              {new Date(item.mergedAt).toLocaleString()}
+                            </p>
+                          </div>
+                        ) : item.mergeError ? (
+                          <div className="text-xs">
+                            <span className="rounded-md border border-rose-200 bg-rose-50 px-2 py-0.5 font-medium text-rose-700">
+                              Merge failed
+                            </span>
+                            <p className="mt-1 text-rose-700">{item.mergeError}</p>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-500">Pending merge</span>
+                        )
+                      ) : (
+                        <span className="text-xs text-slate-500">No PR created</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">

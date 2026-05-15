@@ -47,6 +47,12 @@ function isBlobNotFoundError(err: unknown): boolean {
   return msg.includes("not found") || msg.includes("404");
 }
 
+function isBlobForbiddenError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const msg = err.message.toLowerCase();
+  return msg.includes("403") || msg.includes("forbidden") || msg.includes("unauthorized");
+}
+
 async function readAllFromFs(): Promise<TailorQueueItem[]> {
   try {
     await fs.mkdir(STORE_DIR, { recursive: true });
@@ -90,14 +96,31 @@ async function writeAllToBlob(items: TailorQueueItem[]): Promise<void> {
 }
 
 async function readAll(): Promise<TailorQueueItem[]> {
-  if (useBlobStore()) return readAllFromBlob();
+  if (useBlobStore()) {
+    try {
+      return await readAllFromBlob();
+    } catch (err) {
+      if (isBlobForbiddenError(err)) {
+        return readAllFromFs();
+      }
+      throw err;
+    }
+  }
   return readAllFromFs();
 }
 
 async function writeAll(items: TailorQueueItem[]): Promise<void> {
   if (useBlobStore()) {
-    await writeAllToBlob(items);
-    return;
+    try {
+      await writeAllToBlob(items);
+      return;
+    } catch (err) {
+      if (isBlobForbiddenError(err)) {
+        await writeAllToFs(items);
+        return;
+      }
+      throw err;
+    }
   }
   await writeAllToFs(items);
 }
@@ -238,7 +261,7 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
 
   const startingRef = process.env.CURSOR_CLOUD_REPO_REF?.trim() || "main";
   const autoCreatePR =
-    process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() === "true";
+    process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() !== "false";
   const prompt = buildTailorPrompt({
     personSlug: item.personSlug,
     companySlug: item.companySlug,

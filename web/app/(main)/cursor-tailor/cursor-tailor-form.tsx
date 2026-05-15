@@ -45,6 +45,9 @@ type QueueJob = {
   createdAt?: string;
   updatedAt?: string;
   runId?: string;
+  prUrl?: string | null;
+  mergedAt?: string;
+  mergeError?: string;
   error?: string;
   redirectTo?: string;
 };
@@ -686,6 +689,7 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
                       <th className="px-3 py-2">Packet</th>
                       <th className="px-3 py-2">Person</th>
                       <th className="px-3 py-2">Model</th>
+                      <th className="px-3 py-2">Merge</th>
                       <th className="px-3 py-2">Actions</th>
                     </tr>
                   </thead>
@@ -706,6 +710,23 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
                         </td>
                         <td className="px-3 py-2">{job.personSlug}</td>
                         <td className="px-3 py-2">{job.modelId}</td>
+                        <td className="px-3 py-2">
+                          {job.status !== "finished" ? (
+                            <span className="text-slate-500">—</span>
+                          ) : job.prUrl ? (
+                            job.mergedAt ? (
+                              <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">
+                                Merged
+                              </span>
+                            ) : job.mergeError ? (
+                              <span className="text-rose-700">{job.mergeError}</span>
+                            ) : (
+                              <span className="text-slate-500">Pending merge</span>
+                            )
+                          ) : (
+                            <span className="text-slate-500">No PR</span>
+                          )}
+                        </td>
                         <td className="px-3 py-2">
                           <div className="flex items-center gap-2">
                             {job.redirectTo ? (

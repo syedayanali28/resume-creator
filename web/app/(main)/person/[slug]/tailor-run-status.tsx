@@ -11,6 +11,8 @@ type QueueItem = {
   status: "queued" | "running" | "finished" | "error";
   runId?: string;
   prUrl?: string | null;
+  mergedAt?: string;
+  mergeError?: string;
   error?: string;
   updatedAt?: string;
 };
@@ -103,6 +105,7 @@ export function TailorRunStatus({ personSlug }: { personSlug: string }) {
                   <th className="px-3 py-2">Packet</th>
                   <th className="px-3 py-2">Model</th>
                   <th className="px-3 py-2">Updated</th>
+                  <th className="px-3 py-2">Merge</th>
                   <th className="px-3 py-2">Run</th>
                 </tr>
               </thead>
@@ -119,6 +122,23 @@ export function TailorRunStatus({ personSlug }: { personSlug: string }) {
                     </td>
                     <td className="px-3 py-2">{item.modelId}</td>
                     <td className="px-3 py-2">{item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "—"}</td>
+                    <td className="px-3 py-2">
+                      {item.status !== "finished" ? (
+                        <span className="text-slate-500">—</span>
+                      ) : item.prUrl ? (
+                        item.mergedAt ? (
+                          <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">
+                            Merged
+                          </span>
+                        ) : item.mergeError ? (
+                          <span className="text-rose-700">{item.mergeError}</span>
+                        ) : (
+                          <span className="text-slate-500">Pending merge</span>
+                        )
+                      ) : (
+                        <span className="text-slate-500">No PR</span>
+                      )}
+                    </td>
                     <td className="px-3 py-2">
                       {item.runId ? <span className="font-mono">{item.runId}</span> : "—"}
                       {item.prUrl ? (
