@@ -31,8 +31,13 @@ export async function GET(request: Request) {
     await pruneTailorQueue(personSlug);
   }
 
-  const items = await listTailorQueueItems(personSlug, apiKey);
-  return NextResponse.json({ items });
+  try {
+    const items = await listTailorQueueItems(personSlug, apiKey);
+    return NextResponse.json({ items });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to load queue";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
@@ -89,14 +94,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request fields" }, { status: 400 });
   }
 
-  const item = await enqueueTailorQueueItem({
-    personSlug,
-    companySlug,
-    roleSlug,
-    jobPostingUrl,
-    modelId,
-    apiKey,
-  });
-  return NextResponse.json({ item });
+  try {
+    const item = await enqueueTailorQueueItem({
+      personSlug,
+      companySlug,
+      roleSlug,
+      jobPostingUrl,
+      modelId,
+      apiKey,
+    });
+    return NextResponse.json({ item });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to enqueue item";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 

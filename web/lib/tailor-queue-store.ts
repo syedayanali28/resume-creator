@@ -41,6 +41,12 @@ function useBlobStore(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
 
+function isBlobNotFoundError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const msg = err.message.toLowerCase();
+  return msg.includes("not found") || msg.includes("404");
+}
+
 async function readAllFromFs(): Promise<TailorQueueItem[]> {
   try {
     await fs.mkdir(STORE_DIR, { recursive: true });
@@ -61,11 +67,16 @@ async function readAllFromBlob(): Promise<TailorQueueItem[]> {
   try {
     const meta = await head(BLOB_STATE_PATH);
     const res = await fetch(meta.url, { cache: "no-store" });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      throw new Error(`Blob queue fetch failed (${res.status})`);
+    }
     const parsed = (await res.json()) as TailorQueueItem[];
     return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+  } catch (err) {
+    if (isBlobNotFoundError(err)) {
+      return [];
+    }
+    throw err;
   }
 }
 

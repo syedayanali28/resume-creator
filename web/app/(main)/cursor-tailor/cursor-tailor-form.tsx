@@ -243,9 +243,9 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
     };
   }, [jobPostingUrl, personSlug]);
 
-  async function refreshRemoteQueue() {
+  async function refreshRemoteQueue(options?: { silent?: boolean }) {
     if (!personSlug) return;
-    setLoadingQueue(true);
+    if (!options?.silent) setLoadingQueue(true);
     try {
       const res = await fetch(`/api/cursor-tailor/queue?person=${encodeURIComponent(personSlug)}`, {
         credentials: "same-origin",
@@ -262,20 +262,20 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
             ? `/person/${encodeURIComponent(x.personSlug)}?company=${encodeURIComponent(x.companySlug)}&role=${encodeURIComponent(x.roleSlug)}`
             : x.redirectTo,
       }));
-      setQueueJobs(items);
+      setQueueJobs((prev) => {
+        if (items.length > 0) return items;
+        // Avoid wiping visible queue rows on transient empty responses.
+        return prev;
+      });
     } catch {
       setClientError("Network error while loading remote queue.");
     } finally {
-      setLoadingQueue(false);
+      if (!options?.silent) setLoadingQueue(false);
     }
   }
 
   useEffect(() => {
     void refreshRemoteQueue();
-    const timer = window.setInterval(() => {
-      void refreshRemoteQueue();
-    }, 5000);
-    return () => window.clearInterval(timer);
   }, [personSlug]);
 
   function appendLine(kind: StreamLine["kind"], text: string) {
@@ -501,7 +501,7 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
     }
     setJobPostingUrl("");
     appendLine("meta", `Queued remotely: ${inferred.companySlug}/${inferred.roleSlug}`);
-    await refreshRemoteQueue();
+    await refreshRemoteQueue({ silent: true });
   }
 
   async function onSubmit(e: React.FormEvent) {
