@@ -555,8 +555,8 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
           on the server to run against the checkout next to this app instead.
         </p>
         <p className="mt-2 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-sm">
-          Queue items are dispatched to a remote worker and continue in order even if you leave this
-          page. Progress and completion states appear in each person profile dashboard.
+          Queue items are stored first, then processed one at a time in FIFO order. When the current
+          run finishes, the next link is promoted automatically even if you leave this page.
         </p>
       </section>
 
@@ -676,7 +676,7 @@ export function CursorTailorForm({ people }: { people: PersonOption[] }) {
               onClick={() => {
                 void addCurrentOrInputToQueue();
               }}
-              disabled={!personSlug || queueRunning}
+              disabled={!personSlug}
               className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 hover:border-sky-200 hover:bg-sky-50/60 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Add to queue

@@ -143,17 +143,101 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
   }
 }
 
+async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<void> {
+  const repoUrl = process.env.CURSOR_CLOUD_REPO_URL?.trim();
+  if (!repoUrl) {
+    await saveUpdatedItem(item.id, (curr) => ({
+      ...curr,
+      status: "error",
+      updatedAt: nowIso(),
+      finishedAt: nowIso(),
+      error: "CURSOR_CLOUD_REPO_URL is required for remote queue processing.",
+    }));
+    return;
+  }
+
+  const startingRef = process.env.CURSOR_CLOUD_REPO_REF?.trim() || "main";
+  const autoCreatePR =
+    process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() === "true";
+  const prompt = buildTailorPrompt({
+    personSlug: item.personSlug,
+    companySlug: item.companySlug,
+    roleSlug: item.roleSlug,
+    jobPostingUrl: item.jobPostingUrl,
+  });
+
+  await saveUpdatedItem(item.id, (curr) => ({
+    ...curr,
+    status: "running",
+    updatedAt: nowIso(),
+    startedAt: curr.startedAt ?? nowIso(),
+    error: undefined,
+  }));
+
+  let agent: Awaited<ReturnType<typeof Agent.create>> | null = null;
+  try {
+    agent = await Agent.create({
+      apiKey,
+      model: { id: normalizeModelId(item.modelId) },
+      cloud: {
+        repos: [{ url: repoUrl, startingRef }],
+        autoCreatePR,
+        skipReviewerRequest: true,
+      },
+    });
+    const run = await agent.send(prompt);
+    await saveUpdatedItem(item.id, (curr) => ({
+      ...curr,
+      updatedAt: nowIso(),
+      status: "running",
+      agentId: agent?.agentId,
+      runId: run.id,
+      error: undefined,
+    }));
+  } catch (err) {
+    const message =
+      err instanceof CursorAgentError
+        ? err.message
+        : err instanceof Error
+          ? err.message
+          : "Failed to start remote run";
+    await saveUpdatedItem(item.id, (curr) => ({
+      ...curr,
+      status: "error",
+      updatedAt: nowIso(),
+      finishedAt: nowIso(),
+      error: message,
+    }));
+  } finally {
+    if (agent) await agent[Symbol.asyncDispose]();
+  }
+}
+
+async function processQueue(apiKey?: string): Promise<void> {
+  if (!apiKey) return;
+  const all = await readAll();
+  const running = all.filter((x) => x.status === "running");
+  for (const item of running) {
+    await refreshRunStatus(item, apiKey);
+  }
+
+  const latest = await readAll();
+  const stillRunning = latest.some((x) => x.status === "running");
+  if (stillRunning) return;
+
+  const nextQueued = latest
+    .filter((x) => x.status === "queued")
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0];
+  if (!nextQueued) return;
+
+  await startQueuedItem(nextQueued, apiKey);
+}
+
 export async function listTailorQueueItems(
   personSlug?: string,
   apiKey?: string,
 ): Promise<TailorQueueItem[]> {
-  const all = await readAll();
-  if (apiKey) {
-    const running = all.filter((x) => x.status === "running");
-    for (const item of running) {
-      await refreshRunStatus(item, apiKey);
-    }
-  }
+  await processQueue(apiKey);
   const latest = await readAll();
   const filtered =
     personSlug && personSlug.trim()
@@ -173,10 +257,6 @@ export async function enqueueTailorQueueItem(input: {
   assertSafePathSegment(input.personSlug, "personSlug");
   assertSafePathSegment(input.companySlug, "companySlug");
   assertSafePathSegment(input.roleSlug, "roleSlug");
-  const repoUrl = process.env.CURSOR_CLOUD_REPO_URL?.trim();
-  if (!repoUrl) {
-    throw new Error("CURSOR_CLOUD_REPO_URL is required for remote queue processing.");
-  }
   const items = await readAll();
   const item: TailorQueueItem = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
@@ -185,62 +265,18 @@ export async function enqueueTailorQueueItem(input: {
     roleSlug: input.roleSlug.trim(),
     jobPostingUrl: input.jobPostingUrl.trim(),
     modelId: normalizeModelId(input.modelId),
-    status: "running",
+    status: "queued",
     createdAt: nowIso(),
     updatedAt: nowIso(),
-    startedAt: nowIso(),
   };
-  const startingRef = process.env.CURSOR_CLOUD_REPO_REF?.trim() || "main";
-  const autoCreatePR =
-    process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() === "true";
-
-  const prompt = buildTailorPrompt({
-    personSlug: item.personSlug,
-    companySlug: item.companySlug,
-    roleSlug: item.roleSlug,
-    jobPostingUrl: item.jobPostingUrl,
-  });
-
-  let agent: Awaited<ReturnType<typeof Agent.create>> | null = null;
-  try {
-    agent = await Agent.create({
-      apiKey: input.apiKey,
-      model: { id: normalizeModelId(item.modelId) },
-      cloud: {
-        repos: [{ url: repoUrl, startingRef }],
-        autoCreatePR,
-        skipReviewerRequest: true,
-      },
-    });
-    const run = await agent.send(prompt);
-    item.agentId = agent.agentId;
-    item.runId = run.id;
-    item.error = undefined;
-  } catch (err) {
-    const message =
-      err instanceof CursorAgentError
-        ? err.message
-        : err instanceof Error
-          ? err.message
-          : "Failed to start remote run";
-    item.status = "error";
-    item.finishedAt = nowIso();
-    item.error = message;
-  } finally {
-    if (agent) await agent[Symbol.asyncDispose]();
-    item.updatedAt = nowIso();
-    items.push(item);
-    await writeAll(items);
-  }
+  items.push(item);
+  await writeAll(items);
+  await processQueue(input.apiKey);
   return item;
 }
 
 export async function markTailorQueueFinishedStatuses(apiKey: string): Promise<void> {
-  const items = await readAll();
-  const running = items.filter((x) => x.status === "running");
-  for (const item of running) {
-    await refreshRunStatus(item, apiKey);
-  }
+  await processQueue(apiKey);
 }
 
 export async function pruneTailorQueue(personSlug?: string): Promise<void> {
@@ -250,9 +286,10 @@ export async function pruneTailorQueue(personSlug?: string): Promise<void> {
       ? items.filter(
           (x) =>
             x.personSlug !== personSlug.trim() ||
-            x.status === "running",
+            x.status === "running" ||
+            x.status === "queued",
         )
-      : items.filter((x) => x.status === "running");
+      : items.filter((x) => x.status === "running" || x.status === "queued");
   await writeAll(kept);
 }
 
