@@ -10,6 +10,11 @@ import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
 import { publishRolePdfsAfterRun } from "@/lib/publish-role-pdfs";
 import { mergeQueueItemsById, mergeQueueWithPackets } from "@/lib/merge-queue-with-packets";
 import { scanAllJobPackets } from "@/lib/scan-job-packets";
+import {
+  NO_OUTPUT_STALL_MS,
+  runProgressFingerprint,
+  stallMsSince,
+} from "@/lib/tailor-queue-progress";
 import { readTailorQueueFromBlob, writeTailorQueueToBlob } from "@/lib/tailor-queue-blob";
 
 export type TailorQueueStatus = "queued" | "running" | "finished" | "error";
@@ -33,6 +38,9 @@ export type TailorQueueItem = {
   summary?: string | null;
   durationMs?: number | null;
   error?: string;
+  /** Last time agent output/status fingerprint changed. */
+  lastProgressAt?: string;
+  progressFingerprint?: string;
 };
 
 function queueStoreDir(): string {
@@ -49,9 +57,8 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
-/** Cloud runs can take many minutes; Vercel polls must not block on wait(). */
 const STALE_RUN_MS = 50 * 60 * 1000;
-const MISSING_RUN_ID_MS = 3 * 60 * 1000;
+const MISSING_RUN_ID_MS = NO_OUTPUT_STALL_MS;
 
 function runStartedMs(item: TailorQueueItem): number {
   const raw = item.startedAt ?? item.updatedAt ?? item.createdAt;
@@ -183,19 +190,83 @@ async function markRunError(item: TailorQueueItem, message: string): Promise<voi
   }));
 }
 
+function isQueueRecord(item: TailorQueueItem): boolean {
+  return !item.id.startsWith("packet-");
+}
+
+async function readQueueOnly(): Promise<TailorQueueItem[]> {
+  return (await readAll()).filter(isQueueRecord);
+}
+
+/** Move a running job to the back of the queue for a fresh retry later. */
+async function requeueRunningToEnd(item: TailorQueueItem, reason: string): Promise<void> {
+  const items = await readQueueOnly();
+  const idx = findQueueItemIndex(items, item.id);
+  if (idx < 0) return;
+
+  const [removed] = items.splice(idx, 1);
+  const now = nowIso();
+  items.push({
+    ...removed,
+    status: "queued",
+    updatedAt: now,
+    startedAt: undefined,
+    finishedAt: undefined,
+    agentId: undefined,
+    runId: undefined,
+    lastProgressAt: undefined,
+    progressFingerprint: undefined,
+    durationMs: undefined,
+    error: undefined,
+    summary: `Requeued after skip: ${reason}`,
+  });
+  await writeAll(items);
+}
+
+export async function skipRunningJob(
+  ref: string,
+  apiKey: string,
+  reason = "Skipped manually",
+): Promise<TailorQueueItem | null> {
+  const item = await getTailorQueueItem(ref);
+  if (!item || !isQueueRecord(item) || item.status !== "running") {
+    return null;
+  }
+  await requeueRunningToEnd(item, reason);
+  await processQueue(apiKey);
+  return getTailorQueueItem(ref);
+}
+
+/** Call from stream route when live output arrives. */
+export async function touchQueueJobProgress(ref: string, fingerprint: string): Promise<void> {
+  if (!ref.trim() || !fingerprint) return;
+  await saveUpdatedItem(ref, (curr) => {
+    if (curr.status !== "running") return curr;
+    if (curr.progressFingerprint === fingerprint) return curr;
+    return {
+      ...curr,
+      lastProgressAt: nowIso(),
+      progressFingerprint: fingerprint,
+      updatedAt: nowIso(),
+    };
+  });
+}
+
 async function recoverStuckRun(item: TailorQueueItem): Promise<boolean> {
   if (item.status !== "running") return false;
   const elapsed = Date.now() - runStartedMs(item);
 
   if (!item.runId || !item.agentId) {
-    if (elapsed > MISSING_RUN_ID_MS) {
-      await markRunError(
-        item,
-        "Run never connected to Cursor (missing run id). The server may have timed out while starting. Add the job again or check Vercel function limits.",
-      );
+    if (elapsed >= MISSING_RUN_ID_MS) {
+      await requeueRunningToEnd(item, "No connection to Cursor within 2 minutes");
       return true;
     }
     return false;
+  }
+
+  if (stallMsSince(item.lastProgressAt, item.startedAt) >= NO_OUTPUT_STALL_MS) {
+    await requeueRunningToEnd(item, "No output change for 2 minutes");
+    return true;
   }
 
   if (elapsed > STALE_RUN_MS) {
@@ -220,7 +291,25 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
       agentId: item.agentId,
       apiKey,
     });
-    if (run.status === "running") return;
+
+    const fingerprint = runProgressFingerprint(run);
+    const latest = (await getTailorQueueItem(item.id)) ?? item;
+
+    if (run.status === "running") {
+      if (fingerprint !== latest.progressFingerprint) {
+        await saveUpdatedItem(item.id, (curr) => ({
+          ...curr,
+          lastProgressAt: nowIso(),
+          progressFingerprint: fingerprint,
+          updatedAt: nowIso(),
+        }));
+        return;
+      }
+      if (stallMsSince(latest.lastProgressAt, latest.startedAt) >= NO_OUTPUT_STALL_MS) {
+        await requeueRunningToEnd(latest, "No output change for 2 minutes");
+      }
+      return;
+    }
 
     await finishRunOnItem(item, {
       status: run.status,
@@ -277,11 +366,14 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
       : await createCloudTailorAgent(apiKey, item.modelId);
     const run = await agent.send(prompt);
 
+    const started = nowIso();
     await saveUpdatedItem(item.id, (curr) => ({
       ...curr,
       status: "running",
-      updatedAt: nowIso(),
-      startedAt: nowIso(),
+      updatedAt: started,
+      startedAt: started,
+      lastProgressAt: started,
+      progressFingerprint: `starting|${run.id}`,
       agentId: agent?.agentId,
       runId: run.id,
       error: undefined,
@@ -307,13 +399,13 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
 
 async function processQueue(apiKey?: string): Promise<void> {
   if (!apiKey) return;
-  const all = await readAll();
+  const all = await readQueueOnly();
   const running = all.filter((x) => x.status === "running");
   for (const item of running) {
     await refreshRunStatus(item, apiKey);
   }
 
-  const latest = await readAll();
+  const latest = await readQueueOnly();
   const stillRunning = latest.some((x) => x.status === "running");
   if (stillRunning) return;
 

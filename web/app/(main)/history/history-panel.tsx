@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { JobRunViewer } from "./job-run-viewer";
 import { JobPdfDownloads } from "@/components/tailor-queue/job-pdf-downloads";
+import { JobSkipButton } from "@/components/tailor-queue/job-skip-button";
 import { JobSearchBar } from "@/components/tailor-queue/job-search-bar";
 import { filterTailorQueueJobs } from "@/lib/tailor-queue-search";
 import { useTailorQueue } from "@/lib/use-tailor-queue";
@@ -68,12 +69,13 @@ export function HistoryPanel() {
               <th className="px-4 py-2 font-medium">Job</th>
               <th className="px-4 py-2 font-medium">Status</th>
               <th className="px-4 py-2 font-medium">Files</th>
+              <th className="px-4 py-2 font-medium w-24" />
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {visible.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
                   {searchQuery.trim() ? "No jobs match your search." : "No jobs yet."}
                 </td>
               </tr>
@@ -107,7 +109,14 @@ export function HistoryPanel() {
                         {item.jobPostingUrl}
                       </a>
                     </td>
-                    <td className="px-4 py-3">{statusLabel(item.status)}</td>
+                    <td className="px-4 py-3">
+                      <span className="flex flex-col gap-0.5">
+                        <span>{statusLabel(item.status)}</span>
+                        {item.status === "running" && !item.id.startsWith("packet-") ? (
+                          <span className="text-[10px] text-slate-400">Auto-skip after 2m idle</span>
+                        ) : null}
+                      </span>
+                    </td>
                     <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       {item.status === "finished" ? (
                         <JobPdfDownloads
@@ -127,6 +136,11 @@ export function HistoryPanel() {
                         </Link>
                       )}
                     </td>
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                      {item.status === "running" && !item.id.startsWith("packet-") ? (
+                        <JobSkipButton jobId={item.id} onSkipped={() => void refresh(true)} />
+                      ) : null}
+                    </td>
                   </tr>
                 );
               })
@@ -135,7 +149,10 @@ export function HistoryPanel() {
         </table>
       </div>
 
-      <JobRunViewer job={selected} />
+      <JobRunViewer
+        job={selected}
+        onSkipped={() => void refresh(true)}
+      />
     </div>
   );
 }

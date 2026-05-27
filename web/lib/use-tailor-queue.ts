@@ -12,12 +12,14 @@ export type TailorQueueRow = {
   status: "queued" | "running" | "finished" | "error";
   createdAt?: string;
   updatedAt?: string;
+  startedAt?: string;
   finishedAt?: string;
   agentId?: string;
   runId?: string;
   summary?: string | null;
   durationMs?: number | null;
   error?: string;
+  lastProgressAt?: string;
 };
 
 function hasActiveJobs(items: TailorQueueRow[]): boolean {
@@ -86,7 +88,7 @@ export function useTailorQueue(options?: { personSlug?: string }) {
         setItems(rows);
         setError(null);
         if (hasActiveJobs(rows)) {
-          schedule(8000, true);
+          schedule(15_000, true);
         }
       } catch (e) {
         if (cancelled) return;

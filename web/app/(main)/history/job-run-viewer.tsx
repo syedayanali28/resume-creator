@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useReducer } from "react";
 import { JobPdfDownloads } from "@/components/tailor-queue/job-pdf-downloads";
+import { JobSkipButton } from "@/components/tailor-queue/job-skip-button";
+import { NO_OUTPUT_STALL_MS, stallMsSince } from "@/lib/tailor-queue-progress";
 import type { TailorQueueRow } from "@/lib/use-tailor-queue";
 
 type StreamLine = {
@@ -45,7 +47,13 @@ function streamIdentity(job: TailorQueueRow): string {
   return job.runId ?? job.id;
 }
 
-export function JobRunViewer({ job }: { job: TailorQueueRow | null }) {
+export function JobRunViewer({
+  job,
+  onSkipped,
+}: {
+  job: TailorQueueRow | null;
+  onSkipped?: () => void;
+}) {
   const [lines, setLines] = useState<StreamLine[]>([]);
   const [loading, setLoading] = useState(false);
   const [streamError, setStreamError] = useState<string | null>(null);
@@ -54,6 +62,13 @@ export function JobRunViewer({ job }: { job: TailorQueueRow | null }) {
   const generationRef = useRef(0);
 
   const streamKey = job ? streamIdentity(job) : null;
+  const [, bumpTimer] = useReducer((n: number) => n + 1, 0);
+
+  useEffect(() => {
+    if (!job || job.status !== "running" || job.id.startsWith("packet-")) return;
+    const t = setInterval(() => bumpTimer(), 1000);
+    return () => clearInterval(t);
+  }, [job?.id, job?.status]);
 
   useEffect(() => {
     if (!job || !streamKey) {
@@ -182,8 +197,24 @@ export function JobRunViewer({ job }: { job: TailorQueueRow | null }) {
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Job</p>
           <p className="font-mono text-sm font-semibold text-slate-900">{job.jobId ?? job.id}</p>
         </div>
-        <span className="text-sm text-slate-600">{statusLabel(job.status)}</span>
+        <span className="flex items-center gap-2">
+          {job.status === "running" && !job.id.startsWith("packet-") && onSkipped ? (
+            <JobSkipButton jobId={job.id} onSkipped={onSkipped} />
+          ) : null}
+          <span className="text-sm text-slate-600">{statusLabel(job.status)}</span>
+        </span>
       </div>
+
+      {job.status === "running" && !job.id.startsWith("packet-") ? (
+        <p className="text-xs text-slate-500">
+          {(() => {
+            const stall = stallMsSince(job.lastProgressAt, job.startedAt);
+            const left = Math.max(0, NO_OUTPUT_STALL_MS - stall);
+            const sec = Math.ceil(left / 1000);
+            return `Auto-skip in ~${sec}s if there is no new output (moves job to end of queue).`;
+          })()}
+        </p>
+      ) : null}
 
       <dl className="grid gap-1 text-xs text-slate-600 sm:grid-cols-2">
         {job.runId ? (

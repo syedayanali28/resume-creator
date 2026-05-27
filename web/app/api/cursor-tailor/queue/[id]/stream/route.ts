@@ -5,7 +5,8 @@ import {
   sdkMessageToStreamEvent,
   type TailorStreamEvent,
 } from "@/lib/tailor-run-events";
-import { getTailorQueueItem } from "@/lib/tailor-queue-store";
+import { runProgressFingerprint } from "@/lib/tailor-queue-progress";
+import { getTailorQueueItem, touchQueueJobProgress } from "@/lib/tailor-queue-store";
 
 export const maxDuration = 300;
 
@@ -96,8 +97,12 @@ export async function GET(
           if (run.supports("stream")) {
             for await (const msg of run.stream()) {
               const ev = sdkMessageToStreamEvent(msg);
+              if (ev) {
+                void touchQueueJobProgress(item.id, JSON.stringify(ev).slice(0, 500));
+              }
               if (ev && !pushEvent(controller, ev)) break;
             }
+            void touchQueueJobProgress(item.id, runProgressFingerprint(run));
           } else if (item.summary) {
             pushEvent(controller, { type: "assistant", text: item.summary });
           }

@@ -1,5 +1,6 @@
 "use client";
 
+import { JobSkipButton } from "@/components/tailor-queue/job-skip-button";
 import { JobSearchBar } from "@/components/tailor-queue/job-search-bar";
 import { enqueueTailorJob, inferJobFolderSlugs } from "@/lib/enqueue-tailor-job";
 import { normalizeJobPostingUrl } from "@/lib/job-from-url";
@@ -209,7 +210,12 @@ export function AddJobForm({ people }: { people: PersonOption[] }) {
                       {job.jobPostingUrl}
                     </a>
                   </div>
-                  <span className="shrink-0 text-slate-500">{statusLabel(job)}</span>
+                  <span className="flex shrink-0 items-center gap-2">
+                    <span className="text-slate-500">{statusLabel(job)}</span>
+                    {job.status === "running" && !job.id.startsWith("packet-") && !job.id.startsWith("local-") ? (
+                      <JobSkipButton jobId={job.id} onSkipped={() => void refresh(true)} />
+                    ) : null}
+                  </span>
                 </div>
                 <p className="mt-1 text-xs text-slate-500">
                   {job.companySlug} / {job.roleSlug}
