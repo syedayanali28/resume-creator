@@ -89,11 +89,14 @@
     "roleSlug": "Investment-Analyst-Equity-In-Hong-Kong-Hong-Kong-SAR",
     "jobPostingUrl": "https://www.linkedin.com/jobs/view/4379136666/",
     "modelId": "composer-2",
-    "status": "running",
+    "status": "finished",
     "createdAt": "2026-05-27T07:35:20.443Z",
-    "updatedAt": "2026-05-27T07:35:25.415Z",
+    "updatedAt": "2026-05-27T07:47:05.487Z",
     "startedAt": "2026-05-27T07:35:20.469Z",
     "agentId": "bc-f658aebe-2ca4-4084-afdf-39a2052b0ddb",
-    "runId": "run-c0af44e4-cae0-4e5f-b848-c0296c9c86ae"
+    "runId": "run-c0af44e4-cae0-4e5f-b848-c0296c9c86ae",
+    "finishedAt": "2026-05-27T07:47:05.487Z",
+    "summary": "### Summary\n\n**What I shipped**\n\n- New packet under `people/Zhao-Yanbo/Harvest-Global-Investments-Limited/Investment-Analyst-Equity-In-Hong-Kong-Hong-Kong-SAR/` with:\n  - `job link.txt` (line 1: `https://www.linkedin.com/jobs/view/4379136666/`)\n  - `Zhao-Yanbo_Harvest-Global-Investments-Limited_Investment-Analyst-Equity-In-Hong-Kong-Hong-Kong-SAR_resume.tex` + **`_resume.pdf`**\n  - `Zhao-Yanbo_Harvest-Global-Investments-Limited_Investment-Analyst-Equity-In-Hong-Kong-Hong-Kong-SAR_cover-letter.tex` + **`_cover-letter.pdf`**\n  - `_resume.log` and `_cover-letter.log` from the build (consistent with tracking build logs like the HSBC packet)\n\n**Posting and tailoring**\n\n- Pulled JD text from the public LinkedIn guest HTML (full bullet lists for responsibilities and qualifications; not login-gated for this snapshot). Mapped language to Zhao’s **`complete/master-resume.tex`** facts only (e.g., PM-supported research workflows, Bloomberg/Morningstar, sector sleeves at China Life including energy/infrastructure, FICC internship research distribution, HKUST M.Sc.\\ Finance quantitative training), without inventing employers, tenure, or metrics.\n\n**Pagination (your policy)**\n\n1. Started from a six-role layout like other Zhao one-pagers; **first two roles kept at four bullets**; **later roles at three bullets** once length was confirmed as two pages.  \n2. **Dropped the chronologically oldest role** (**Evalueserve**, Jul.\\ -- Sept.\\ 2020) with an explicit `%` comment before Extracurricular.  \n3. **Shortened extracurricular bullets** to **≤15 words** each and tightened several work bullets.  \n4. **Did not change** preamble, margins, or list spacing macros to cheat length.\n\n- **`pdflatex` reports the resume PDF as exactly one page** (`Output written … (1 page …)` in `_resume.log`). Cover letter builds to **one page** as well.\n\n**Tooling**\n\n- **`python`** was absent; **`python3`** works. **`pdflatex`** was missing initially; **`texlive-latex-base`** (plus related deps) was installed so the repo script could run.\n\n**Git**\n\n- Committed on **`main`** and **pushed to `origin/main`** after **`git pull --rebase`**. No PR was opened, per your instruction.",
+    "durationMs": 698112
   }
 ]
