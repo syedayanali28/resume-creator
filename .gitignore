@@ -1,3 +1,7 @@
 .vercel
 .env*.local
 .env*
+
+# Python bytecode (local runs of scripts/generate_job_package.py, etc.)
+__pycache__/
+*.py[cod]
