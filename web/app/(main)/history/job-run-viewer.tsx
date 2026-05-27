@@ -227,11 +227,15 @@ export function JobRunViewer({ job }: { job: TailorQueueRow | null }) {
           <p className="text-slate-400">
             {job.status === "queued"
               ? "Waiting to start…"
-              : job.error
-                ? job.error
-                : job.summary
-                  ? job.summary
-                  : "No output yet."}
+              : job.status === "running" && (!job.runId || !job.agentId)
+                ? "Starting cloud agent… Output will appear when the run connects (often a few minutes). The queue advances when this finishes."
+                : job.status === "running"
+                  ? "Cloud agent is running. Live logs appear when Cursor streams them; many runs only show output near the end."
+                  : job.error
+                    ? job.error
+                    : job.summary
+                      ? job.summary
+                      : "No output yet."}
           </p>
         ) : (
           lines.map((line) => (

@@ -49,6 +49,16 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
+/** Cloud runs can take many minutes; Vercel polls must not block on wait(). */
+const STALE_RUN_MS = 50 * 60 * 1000;
+const MISSING_RUN_ID_MS = 3 * 60 * 1000;
+
+function runStartedMs(item: TailorQueueItem): number {
+  const raw = item.startedAt ?? item.updatedAt ?? item.createdAt;
+  const t = new Date(raw).getTime();
+  return Number.isNaN(t) ? 0 : t;
+}
+
 function createJobId(): string {
   return `J-${Math.random().toString(36).slice(2, 10)}`;
 }
@@ -163,8 +173,47 @@ async function finishRunOnItem(item: TailorQueueItem, result: AgentRunResult): P
   }
 }
 
+async function markRunError(item: TailorQueueItem, message: string): Promise<void> {
+  await saveUpdatedItem(item.id, (curr) => ({
+    ...curr,
+    status: "error",
+    updatedAt: nowIso(),
+    finishedAt: nowIso(),
+    error: message,
+  }));
+}
+
+async function recoverStuckRun(item: TailorQueueItem): Promise<boolean> {
+  if (item.status !== "running") return false;
+  const elapsed = Date.now() - runStartedMs(item);
+
+  if (!item.runId || !item.agentId) {
+    if (elapsed > MISSING_RUN_ID_MS) {
+      await markRunError(
+        item,
+        "Run never connected to Cursor (missing run id). The server may have timed out while starting. Add the job again or check Vercel function limits.",
+      );
+      return true;
+    }
+    return false;
+  }
+
+  if (elapsed > STALE_RUN_MS) {
+    await markRunError(
+      item,
+      "Run timed out after 50 minutes. Check the Cursor dashboard for this agent, then retry.",
+    );
+    return true;
+  }
+
+  return false;
+}
+
 async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<void> {
-  if (!item.agentId || !item.runId || item.status !== "running") return;
+  if (item.status !== "running") return;
+  if (await recoverStuckRun(item)) return;
+  if (!item.agentId || !item.runId) return;
+
   try {
     const run = await Agent.getRun(item.runId, {
       runtime: agentRuntime(),
@@ -172,8 +221,12 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
       apiKey,
     });
     if (run.status === "running") return;
-    const result = await run.wait();
-    await finishRunOnItem(item, result);
+
+    await finishRunOnItem(item, {
+      status: run.status,
+      result: run.result ?? null,
+      durationMs: run.durationMs ?? null,
+    });
   } catch (err) {
     const message =
       err instanceof CursorAgentError
@@ -213,14 +266,6 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
     jobPostingUrl: item.jobPostingUrl,
   });
 
-  await saveUpdatedItem(item.id, (curr) => ({
-    ...curr,
-    status: "running",
-    updatedAt: nowIso(),
-    startedAt: curr.startedAt ?? nowIso(),
-    error: undefined,
-  }));
-
   let agent: Awaited<ReturnType<typeof Agent.create>> | null = null;
   try {
     agent = useLocal
@@ -232,27 +277,21 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
       : await createCloudTailorAgent(apiKey, item.modelId);
     const run = await agent.send(prompt);
 
-    if (useLocal) {
-      await saveUpdatedItem(item.id, (curr) => ({
-        ...curr,
-        updatedAt: nowIso(),
-        status: "running",
-        agentId: agent?.agentId,
-        runId: run.id,
-      }));
-      const result = await run.wait();
-      await finishRunOnItem(item, result);
-      return;
-    }
-
     await saveUpdatedItem(item.id, (curr) => ({
       ...curr,
-      updatedAt: nowIso(),
       status: "running",
+      updatedAt: nowIso(),
+      startedAt: nowIso(),
       agentId: agent?.agentId,
       runId: run.id,
       error: undefined,
     }));
+
+    if (useLocal) {
+      const result = await run.wait();
+      await finishRunOnItem(item, result);
+    }
+    // Cloud: do not dispose agent or wait here — Cursor runs remotely; polls refresh status.
   } catch (err) {
     const message =
       err instanceof CursorAgentError
@@ -260,15 +299,9 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
         : err instanceof Error
           ? err.message
           : "Failed to start remote run";
-    await saveUpdatedItem(item.id, (curr) => ({
-      ...curr,
-      status: "error",
-      updatedAt: nowIso(),
-      finishedAt: nowIso(),
-      error: message,
-    }));
+    await markRunError(item, message);
   } finally {
-    if (agent) await agent[Symbol.asyncDispose]();
+    if (agent && useLocal) await agent[Symbol.asyncDispose]();
   }
 }
 

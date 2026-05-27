@@ -73,8 +73,16 @@ export async function GET(
           if (!item.runId || !item.agentId) {
             if (item.status === "queued") {
               pushEvent(controller, { type: "status", status: "Waiting in queue…" });
+            } else if (item.status === "running") {
+              pushEvent(controller, {
+                type: "status",
+                status:
+                  "Starting cloud agent… Live output appears when the run connects. This can take a few minutes.",
+              });
             } else if (item.error) {
               pushEvent(controller, { type: "error", error: item.error });
+            } else if (item.summary) {
+              pushEvent(controller, { type: "assistant", text: item.summary });
             }
             return;
           }

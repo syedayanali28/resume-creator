@@ -3,6 +3,8 @@ import { inferSlugsFromJobUrl, normalizeJobPostingUrl } from "@/lib/job-from-url
 import { assertSafePathSegment } from "@/lib/paths";
 import { enqueueTailorQueueItem, listTailorQueueItems } from "@/lib/tailor-queue-store";
 
+export const maxDuration = 60;
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const personSlug = url.searchParams.get("person")?.trim();
