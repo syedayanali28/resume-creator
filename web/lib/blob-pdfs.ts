@@ -31,6 +31,10 @@ export function isBlobConfigured(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_TOKEN);
 }
 
+export function clearRoleBlobCache(person: string, company: string, role: string): void {
+  roleBlobCache.delete(roleKey(person, company, role));
+}
+
 async function listRoleBlobs(
   person: string,
   company: string,

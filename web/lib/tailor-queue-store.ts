@@ -7,6 +7,7 @@ import { createCloudTailorAgent } from "@/lib/cursor-cloud-agent";
 import { useLocalTailorRuntime } from "@/lib/cursor-tailor-runtime";
 import { normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
+import { publishRolePdfsAfterRun } from "@/lib/publish-role-pdfs";
 
 export type TailorQueueStatus = "queued" | "running" | "finished" | "error";
 
@@ -118,8 +119,8 @@ type AgentRunResult = {
   durationMs?: number | null;
 };
 
-async function finishRunOnItem(itemId: string, result: AgentRunResult): Promise<void> {
-  await saveUpdatedItem(itemId, (curr) => ({
+async function finishRunOnItem(item: TailorQueueItem, result: AgentRunResult): Promise<void> {
+  await saveUpdatedItem(item.id, (curr) => ({
     ...curr,
     status: result.status === "finished" ? "finished" : "error",
     updatedAt: nowIso(),
@@ -128,6 +129,10 @@ async function finishRunOnItem(itemId: string, result: AgentRunResult): Promise<
     durationMs: result.durationMs ?? null,
     error: result.status === "finished" ? undefined : `Run ended with status: ${result.status}`,
   }));
+
+  if (result.status === "finished") {
+    void publishRolePdfsAfterRun(item.personSlug, item.companySlug, item.roleSlug);
+  }
 }
 
 async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<void> {
@@ -140,7 +145,7 @@ async function refreshRunStatus(item: TailorQueueItem, apiKey: string): Promise<
     });
     if (run.status === "running") return;
     const result = await run.wait();
-    await finishRunOnItem(item.id, result);
+    await finishRunOnItem(item, result);
   } catch (err) {
     const message =
       err instanceof CursorAgentError
@@ -208,7 +213,7 @@ async function startQueuedItem(item: TailorQueueItem, apiKey: string): Promise<v
         runId: run.id,
       }));
       const result = await run.wait();
-      await finishRunOnItem(item.id, result);
+      await finishRunOnItem(item, result);
       return;
     }
 

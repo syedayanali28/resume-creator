@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ApplicationStatus } from "./application-status";
-import { getBlobPdfAvailability } from "./blob-pdfs";
+import { getRolePdfAvailability } from "./pdf-availability";
 import { readJobDescriptionMeta, roleHasJobDescriptionFile } from "./job-description-meta";
 import { getPeopleRoot } from "./paths";
 
@@ -54,23 +54,14 @@ function readPostingLink(roleDir: string, metaLink: string | null): string | nul
   return null;
 }
 
-function packetStem(person: string, company: string, role: string): string {
-  return `${person}_${company}_${role}`;
-}
-
 async function scanRoleRow(
   person: string,
   company: string,
   role: string,
   roleDir: string,
 ): Promise<RoleApplicationRow> {
-  const stem = packetStem(person, company, role);
   const meta = readJobDescriptionMeta(roleDir);
-  const resumePdf = path.join(roleDir, `${stem}_resume.pdf`);
-  const coverPdf = path.join(roleDir, `${stem}_cover-letter.pdf`);
-  const blob = await getBlobPdfAvailability(person, company, role);
-  const localResume = fs.existsSync(resumePdf);
-  const localCover = fs.existsSync(coverPdf);
+  const pdfs = await getRolePdfAvailability(person, company, role);
   return {
     companySlug: company,
     roleSlug: role,
@@ -79,8 +70,8 @@ async function scanRoleRow(
     appliedAt: meta.appliedAt,
     status: meta.status,
     note: meta.note,
-    hasResumePdf: localResume || blob.hasResume,
-    hasCoverPdf: localCover || blob.hasCover,
+    hasResumePdf: pdfs.hasResume,
+    hasCoverPdf: pdfs.hasCover,
     hasJobDescription: roleHasJobDescriptionFile(roleDir),
   };
 }

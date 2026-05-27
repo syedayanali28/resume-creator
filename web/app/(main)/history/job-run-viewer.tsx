@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { JobPdfDownloads } from "@/components/tailor-queue/job-pdf-downloads";
 import type { TailorQueueRow } from "@/lib/use-tailor-queue";
 
 type StreamLine = {
@@ -200,6 +201,21 @@ export function JobRunViewer({ job }: { job: TailorQueueRow | null }) {
       </dl>
 
       {streamError ? <p className="text-sm text-red-600">{streamError}</p> : null}
+
+      {job.status === "finished" ? (
+        <div className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+            PDFs
+          </p>
+          <JobPdfDownloads
+            personSlug={job.personSlug}
+            companySlug={job.companySlug}
+            roleSlug={job.roleSlug}
+            showMissingHint
+            syncToBlobIfMissing
+          />
+        </div>
+      ) : null}
 
       <div
         ref={logRef}

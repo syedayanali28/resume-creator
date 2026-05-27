@@ -2,9 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { NextResponse } from "next/server";
 import { getBlobPdfUrl } from "@/lib/blob-pdfs";
+import { githubRawPdfUrl } from "@/lib/github-raw-pdf";
+import { pdfFilename, rolePdfAbsPath, type PdfKind } from "@/lib/pdf-files";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
 
-type Kind = "resume" | "cover-letter";
+type Kind = PdfKind;
 
 export async function GET(
   request: Request,
@@ -32,45 +34,47 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const stem = `${person}_${company}_${role}`;
-  const filename =
-    kind === "resume" ? `${stem}_resume.pdf` : `${stem}_cover-letter.pdf`;
-  const abs = path.join(roleDir, filename);
+  const filename = pdfFilename(person, company, role, kind);
+  const abs = rolePdfAbsPath(person, company, role, kind);
   const query = new URL(request.url).searchParams;
   const viewMode = query.get("view") === "1";
   const disposition = viewMode ? "inline" : "attachment";
 
-  if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
-    const blobUrl = await getBlobPdfUrl(person, company, role, kind);
-    if (!blobUrl) {
-      return NextResponse.json({ error: "File not found" }, { status: 404 });
-    }
+  const safeAsciiName = filename.replace(/[^\x20-\x7E]/g, "_");
+  const contentDisposition = `${disposition}; filename="${safeAsciiName.replaceAll('"', "")}"`;
 
-    const upstream = await fetch(blobUrl, { cache: "no-store" });
-    if (!upstream.ok) {
-      return NextResponse.json({ error: "Blob fetch failed" }, { status: 502 });
-    }
-
-    const bytes = await upstream.arrayBuffer();
+  function pdfResponse(data: Buffer | ArrayBuffer): NextResponse {
+    const body = Buffer.isBuffer(data) ? data : Buffer.from(data);
     const headers = new Headers();
-    const safeAsciiName = filename.replace(/[^\x20-\x7E]/g, "_");
-    headers.set(
-      "Content-Disposition",
-      `${disposition}; filename="${safeAsciiName.replaceAll('"', "")}"`,
-    );
+    headers.set("Content-Disposition", contentDisposition);
     headers.set("Content-Type", "application/pdf");
-    headers.set("Content-Length", String(bytes.byteLength));
-    return new NextResponse(bytes, { status: 200, headers });
+    headers.set("Content-Length", String(body.length));
+    return new NextResponse(new Uint8Array(body), { status: 200, headers });
   }
 
-  const buf = fs.readFileSync(abs);
-  const headers = new Headers();
-  const safeAsciiName = filename.replace(/[^\x20-\x7E]/g, "_");
-  headers.set(
-    "Content-Disposition",
-    `${disposition}; filename="${safeAsciiName.replaceAll('"', "")}"`,
-  );
-  headers.set("Content-Type", "application/pdf");
-  headers.set("Content-Length", String(buf.length));
-  return new NextResponse(buf, { status: 200, headers });
+  const blobUrl = await getBlobPdfUrl(person, company, role, kind);
+  if (blobUrl) {
+    const upstream = await fetch(blobUrl, { cache: "no-store" });
+    if (upstream.ok) {
+      return pdfResponse(await upstream.arrayBuffer());
+    }
+  }
+
+  if (fs.existsSync(abs) && fs.statSync(abs).isFile()) {
+    return pdfResponse(fs.readFileSync(abs));
+  }
+
+  const upstreamUrl = githubRawPdfUrl(person, company, role, kind);
+  if (upstreamUrl) {
+    const upstream = await fetch(upstreamUrl, { cache: "no-store" });
+    if (upstream.ok) {
+      return pdfResponse(await upstream.arrayBuffer());
+    }
+  }
+
+  if (!blobUrl && !upstreamUrl) {
+    return NextResponse.json({ error: "File not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ error: "PDF fetch failed" }, { status: 502 });
 }

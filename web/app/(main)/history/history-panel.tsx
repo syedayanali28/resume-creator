@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { JobRunViewer } from "./job-run-viewer";
 import { JobHideButton } from "@/components/tailor-queue/job-hide-button";
+import { JobPdfDownloads } from "@/components/tailor-queue/job-pdf-downloads";
 import { JobSearchBar } from "@/components/tailor-queue/job-search-bar";
 import { filterTailorQueueJobs, isTailorQueueJobHidden } from "@/lib/tailor-queue-search";
 import { useTailorQueue } from "@/lib/use-tailor-queue";
@@ -126,20 +127,14 @@ export function HistoryPanel() {
                     <td className="px-4 py-3">{statusLabel(item.status)}</td>
                     <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       {item.status === "finished" ? (
-                        <span className="flex gap-2">
-                          <a
-                            href={`/api/files/${encodeURIComponent(item.personSlug)}/${encodeURIComponent(item.companySlug)}/${encodeURIComponent(item.roleSlug)}/resume`}
-                            className="text-sky-700 hover:underline"
-                          >
-                            Resume
-                          </a>
-                          <a
-                            href={`/api/files/${encodeURIComponent(item.personSlug)}/${encodeURIComponent(item.companySlug)}/${encodeURIComponent(item.roleSlug)}/cover-letter`}
-                            className="text-sky-700 hover:underline"
-                          >
-                            Cover
-                          </a>
-                        </span>
+                        <JobPdfDownloads
+                          personSlug={item.personSlug}
+                          companySlug={item.companySlug}
+                          roleSlug={item.roleSlug}
+                          compact
+                          showMissingHint
+                          syncToBlobIfMissing
+                        />
                       ) : (
                         <Link
                           href={`/person/${encodeURIComponent(item.personSlug)}?company=${encodeURIComponent(item.companySlug)}&role=${encodeURIComponent(item.roleSlug)}`}
