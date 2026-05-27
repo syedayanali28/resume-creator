@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -312,13 +312,7 @@ o_Linkedin_ECM-In-Hong-Kong-Hong-Kong-SAR_cover-letter.out)
 \openout3 = `Zhao-Yanbo_Linkedin_ECM-In-Hong-Kong-Hong-Kong-SAR_cover-letter.ou
 t'.
 
-
-Overfull \hbox (1.00774pt too wide) in paragraph at lines 46--47
-[]\T1/lmr/m/n/10 My M.Sc. Fi-nance (Hon-ours) at HKUST and B.B.A. Pro-fes-siona
-l Ac-coun-tancy (Hon-ours) at CUHK, to-gether with Bloomberg,
- []
-
-[1
+ [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-ec.enc}]
@@ -339,12 +333,12 @@ Here is how much of TeX's memory you used:
  30237 multiletter control sequences out of 15000+600000
  564817 words of font info for 39 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,5n,79p,774b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,5n,79p,858b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmr10.pfb>
 Output written on /workspace/people/Zhao-Yanbo/Linkedin/ECM-In-Hong-Kong-Hong-K
 ong-SAR/Zhao-Yanbo_Linkedin_ECM-In-Hong-Kong-Hong-Kong-SAR_cover-letter.pdf (1 
-page, 66715 bytes).
+page, 66614 bytes).
 PDF statistics:
  25 PDF objects out of 1000 (max. 8388607)
  17 compressed objects within 1 object stream
