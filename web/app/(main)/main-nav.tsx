@@ -3,29 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type NavItem = {
-  href: string;
-  label: string;
-};
-
-const NAV_ITEMS: NavItem[] = [
+const NAV = [
   { href: "/", label: "Dashboard" },
-  { href: "/cursor-tailor", label: "AI Tailor" },
-  { href: "/runs", label: "Active Runs" },
-];
-
-function isActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+  { href: "/add", label: "Add job" },
+  { href: "/history", label: "History" },
+] as const;
 
 export function MainNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-wrap items-center gap-2">
-      {NAV_ITEMS.map((item) => {
-        const active = isActive(pathname, item.href);
+    <nav className="flex items-center gap-1">
+      {NAV.map((item) => {
+        const active =
+          item.href === "/"
+            ? pathname === "/"
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (
           <Link
             key={item.href}
@@ -33,8 +26,8 @@ export function MainNav() {
             aria-current={active ? "page" : undefined}
             className={
               active
-                ? "rounded-full border border-sky-700 bg-sky-700 px-4 py-1.5 text-sm font-semibold text-white shadow-sm shadow-sky-900/25"
-                : "rounded-full border border-slate-300 bg-white px-4 py-1.5 text-sm font-semibold text-slate-800 hover:border-slate-400 hover:bg-slate-50"
+                ? "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white"
+                : "rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
             }
           >
             {item.label}

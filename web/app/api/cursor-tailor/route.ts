@@ -1,13 +1,11 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import path from "node:path";
 import { Agent, CursorAgentError } from "@cursor/sdk";
 import { buildTailorPrompt } from "@/lib/build-tailor-prompt";
+import { buildCloudTailorAgentOptions } from "@/lib/cursor-cloud-agent";
+import { useLocalTailorRuntime } from "@/lib/cursor-tailor-runtime";
+import { normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
-import {
-  portalSessionCookieName,
-  verifyPortalSession,
-} from "@/lib/session";
 
 export const maxDuration = 300;
 
@@ -28,11 +26,6 @@ function getRepoRootFromPeopleRoot(): string {
 }
 
 export async function POST(request: Request) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const apiKey = process.env.CURSOR_API_KEY?.trim();
   if (!apiKey) {
     return NextResponse.json(
@@ -60,7 +53,7 @@ export async function POST(request: Request) {
   const companySlug = typeof b.companySlug === "string" ? b.companySlug.trim() : "";
   const roleSlug = typeof b.roleSlug === "string" ? b.roleSlug.trim() : "";
   const jobPostingUrlRaw =
-    typeof b.jobPostingUrl === "string" ? b.jobPostingUrl.trim() : "";
+    typeof b.jobPostingUrl === "string" ? normalizeJobPostingUrl(b.jobPostingUrl) : "";
 
   if (!personSlug || !companySlug || !roleSlug || !jobPostingUrlRaw) {
     return NextResponse.json(
@@ -97,11 +90,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const useLocal = process.env.CURSOR_TAILOR_RUNTIME?.trim().toLowerCase() === "local";
+  const useLocal = useLocalTailorRuntime();
   const repoUrl = process.env.CURSOR_CLOUD_REPO_URL?.trim();
-  const startingRef = process.env.CURSOR_CLOUD_REPO_REF?.trim() || "main";
-  const autoCreatePR =
-    process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() === "true";
 
   const prompt = buildTailorPrompt({
     personSlug,
@@ -110,23 +100,13 @@ export async function POST(request: Request) {
     jobPostingUrl: jobPostingUrl.toString(),
   });
 
-  const agentOptions = {
-    apiKey,
-    model: { id: "composer-2" as const },
-    ...(useLocal
-      ? {
-          local: {
-            cwd: getRepoRootFromPeopleRoot(),
-          },
-        }
-      : {
-          cloud: {
-            repos: [{ url: repoUrl!, startingRef }],
-            autoCreatePR,
-            skipReviewerRequest: true,
-          },
-        }),
-  };
+  const agentOptions = useLocal
+    ? {
+        apiKey,
+        model: { id: "composer-2" as const },
+        local: { cwd: getRepoRootFromPeopleRoot() },
+      }
+    : buildCloudTailorAgentOptions(apiKey, "composer-2");
 
   if (!useLocal && !repoUrl) {
     return NextResponse.json(
@@ -141,16 +121,12 @@ export async function POST(request: Request) {
   try {
     const result = await Agent.prompt(prompt, agentOptions);
 
-    const prUrl = result.git?.branches?.find((x) => x.prUrl)?.prUrl;
-
     return NextResponse.json({
       ok: result.status === "finished",
       status: result.status,
       runId: result.id,
       summary: result.result ?? null,
       durationMs: result.durationMs ?? null,
-      prUrl: prUrl ?? null,
-      git: result.git ?? null,
       runtime: useLocal ? "local" : "cloud",
     });
   } catch (err) {

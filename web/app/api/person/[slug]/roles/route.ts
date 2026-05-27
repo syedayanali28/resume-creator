@@ -1,21 +1,11 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getPersonDashboard } from "@/lib/scan-people";
 import { assertSafePathSegment } from "@/lib/paths";
-import {
-  portalSessionCookieName,
-  verifyPortalSession,
-} from "@/lib/session";
 
 export async function GET(
   _request: Request,
   context: { params: Promise<{ slug: string }> },
 ) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { slug } = await context.params;
   try {
     assertSafePathSegment(slug, "person");

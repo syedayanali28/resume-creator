@@ -1,13 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getBlobPdfUrl } from "@/lib/blob-pdfs";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
-import {
-  portalSessionCookieName,
-  verifyPortalSession,
-} from "@/lib/session";
 
 type Kind = "resume" | "cover-letter";
 
@@ -17,11 +12,6 @@ export async function GET(
     params: Promise<{ person: string; company: string; role: string; kind: string }>;
   },
 ) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { person, company, role, kind: kindRaw } = await context.params;
   try {
     assertSafePathSegment(person, "person");

@@ -13,8 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Application desk",
-  description: "Per-person job dashboards: postings, applications, status, and PDF downloads.",
+  title: {
+    default: "Resume Creator",
+    template: "%s · Resume Creator",
+  },
+  description: "Tailor resumes and CVs from job links with AI-assisted editing.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-touch-icon.svg", type: "image/svg+xml" }],
+  },
+  applicationName: "Resume Creator",
 };
 
 export default function RootLayout({

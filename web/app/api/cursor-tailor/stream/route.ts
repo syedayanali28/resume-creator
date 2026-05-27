@@ -1,9 +1,10 @@
-import { cookies } from "next/headers";
 import path from "node:path";
 import { Agent, CursorAgentError } from "@cursor/sdk";
 import { buildTailorPrompt } from "@/lib/build-tailor-prompt";
+import { buildCloudTailorAgentOptions } from "@/lib/cursor-cloud-agent";
+import { useLocalTailorRuntime } from "@/lib/cursor-tailor-runtime";
+import { normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
-import { portalSessionCookieName, verifyPortalSession } from "@/lib/session";
 
 export const maxDuration = 300;
 
@@ -26,7 +27,6 @@ type StreamEvent =
       runId: string;
       summary: string | null;
       durationMs: number | null;
-      prUrl: string | null;
       redirectTo: string;
     }
   | { type: "error"; error: string; code?: string; isRetryable?: boolean };
@@ -60,14 +60,6 @@ function writeNdjsonLine(controller: ReadableStreamDefaultController<Uint8Array>
 }
 
 export async function POST(request: Request) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
   const apiKey = process.env.CURSOR_API_KEY?.trim();
   if (!apiKey) {
     return new Response(
@@ -103,7 +95,8 @@ export async function POST(request: Request) {
   const personSlug = typeof b.personSlug === "string" ? b.personSlug.trim() : "";
   const companySlug = typeof b.companySlug === "string" ? b.companySlug.trim() : "";
   const roleSlug = typeof b.roleSlug === "string" ? b.roleSlug.trim() : "";
-  const jobPostingUrlRaw = typeof b.jobPostingUrl === "string" ? b.jobPostingUrl.trim() : "";
+  const jobPostingUrlRaw =
+    typeof b.jobPostingUrl === "string" ? normalizeJobPostingUrl(b.jobPostingUrl) : "";
   const modelIdRaw = typeof b.modelId === "string" ? b.modelId.trim() : "";
   const modelId = modelIdRaw || "composer-2";
 
@@ -150,10 +143,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const useLocal = process.env.CURSOR_TAILOR_RUNTIME?.trim().toLowerCase() === "local";
+  const useLocal = useLocalTailorRuntime();
   const repoUrl = process.env.CURSOR_CLOUD_REPO_URL?.trim();
-  const startingRef = process.env.CURSOR_CLOUD_REPO_REF?.trim() || "main";
-  const autoCreatePR = process.env.CURSOR_CLOUD_AUTO_CREATE_PR?.trim().toLowerCase() === "true";
 
   if (!useLocal && !repoUrl) {
     return new Response(
@@ -175,23 +166,13 @@ export async function POST(request: Request) {
     jobPostingUrl: jobPostingUrl.toString(),
   });
 
-  const agentOptions = {
-    apiKey,
-    model: { id: modelId },
-    ...(useLocal
-      ? {
-          local: {
-            cwd: getRepoRootFromPeopleRoot(),
-          },
-        }
-      : {
-          cloud: {
-            repos: [{ url: repoUrl!, startingRef }],
-            autoCreatePR,
-            skipReviewerRequest: true,
-          },
-        }),
-  };
+  const agentOptions = useLocal
+    ? {
+        apiKey,
+        model: { id: modelId },
+        local: { cwd: getRepoRootFromPeopleRoot() },
+      }
+    : buildCloudTailorAgentOptions(apiKey, modelId);
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
@@ -243,7 +224,6 @@ export async function POST(request: Request) {
           }
 
           const result = await run.wait();
-          const prUrl = result.git?.branches?.find((x) => x.prUrl)?.prUrl ?? null;
           writeNdjsonLine(controller, {
             type: "result",
             ok: result.status === "finished",
@@ -251,7 +231,6 @@ export async function POST(request: Request) {
             runId: result.id,
             summary: result.result ?? null,
             durationMs: result.durationMs ?? null,
-            prUrl,
             redirectTo: redirectUrl(personSlug, companySlug, roleSlug),
           });
         } catch (err) {

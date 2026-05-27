@@ -33,6 +33,33 @@ export function linkedInJobViewId(url: URL): string | null {
   return m?.[1] ?? null;
 }
 
+function isLinkedInHost(hostname: string): boolean {
+  const host = hostname.replace(/^www\./i, "").toLowerCase();
+  return host === "linkedin.com" || host.endsWith(".linkedin.com");
+}
+
+/** Drop tracking query params; LinkedIn jobs become `https://www.linkedin.com/jobs/view/{id}/`. */
+export function normalizeJobPostingUrl(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return trimmed;
+  try {
+    const u = new URL(trimmed);
+    if (isLinkedInHost(u.hostname)) {
+      const jobId = linkedInJobViewId(u);
+      if (jobId) {
+        return `https://www.linkedin.com/jobs/view/${jobId}/`;
+      }
+    }
+    u.search = "";
+    u.hash = "";
+    let out = u.toString();
+    if (out.endsWith("?")) out = out.slice(0, -1);
+    return out;
+  } catch {
+    return trimmed;
+  }
+}
+
 export function hostSlugForCompany(url: URL): string {
   const host = url.hostname.replace(/^www\./i, "").split(".")[0] ?? "site";
   return slugifyFolderSegment(host, "Company");
@@ -92,9 +119,10 @@ export function inferSlugsFromJobUrl(
   jobUrl: string,
   pageTitle: string | null,
 ): { companySlug: string; roleSlug: string; source: SlugInferenceSource; titleRaw: string | null } {
+  const canonical = normalizeJobPostingUrl(jobUrl);
   let u: URL;
   try {
-    u = new URL(jobUrl.trim());
+    u = new URL(canonical);
   } catch {
     return {
       companySlug: "Application",

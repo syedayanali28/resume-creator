@@ -1,3 +1,5 @@
+import { cloudTargetBranch } from "@/lib/cursor-cloud-agent";
+
 export type TailorPromptInput = {
   personSlug: string;
   companySlug: string;
@@ -11,6 +13,7 @@ export type TailorPromptInput = {
  */
 export function buildTailorPrompt(input: TailorPromptInput): string {
   const { personSlug, companySlug, roleSlug, jobPostingUrl } = input;
+  const targetBranch = cloudTargetBranch();
 
   return `You are in the resume_creator repository at the workspace root.
 
@@ -54,7 +57,8 @@ Concrete steps:
      e) Rewrite Extracurricular Activities bullets to be concise, each bullet no more than 15 words.
      f) Recompile and re-check visually.
    - Preserve factual accuracy: do not invent employers, dates, titles, or metrics.
-7. End with a short summary: files touched, whether both PDFs built, and any blockers (e.g. posting behind login).
+7. Git: commit all changes with a clear message and push directly to the \`${targetBranch}\` branch. Do not open a pull request.
+8. End with a short summary: files touched, whether both PDFs built, git push status, and any blockers (e.g. posting behind login).
 
 Use model behaviour consistent with composer-2: precise edits, minimal unrelated churn.`;
 }

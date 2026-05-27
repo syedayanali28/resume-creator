@@ -1,21 +1,13 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { inferSlugsFromJobUrl, normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment } from "@/lib/paths";
 import {
   enqueueTailorQueueItem,
   listTailorQueueItems,
   pruneTailorQueue,
 } from "@/lib/tailor-queue-store";
-import { portalSessionCookieName, verifyPortalSession } from "@/lib/session";
-
-function unauthorized() {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-}
 
 export async function GET(request: Request) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) return unauthorized();
-
   const url = new URL(request.url);
   const personSlug = url.searchParams.get("person")?.trim();
   const prune = url.searchParams.get("prune") === "1";
@@ -27,12 +19,14 @@ export async function GET(request: Request) {
     }
   }
   const apiKey = process.env.CURSOR_API_KEY?.trim();
+  const advance = url.searchParams.get("advance") === "1";
+  const includeHidden = url.searchParams.get("includeHidden") === "1";
   if (prune) {
     await pruneTailorQueue(personSlug);
   }
 
   try {
-    const items = await listTailorQueueItems(personSlug, apiKey);
+    const items = await listTailorQueueItems(personSlug, apiKey, { advance, includeHidden });
     return NextResponse.json({ items });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to load queue";
@@ -41,19 +35,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) return unauthorized();
-
   const apiKey = process.env.CURSOR_API_KEY?.trim();
-  if (!apiKey) {
-    return NextResponse.json(
-      {
-        error:
-          "CURSOR_API_KEY is not set. Add it to web/.env.local, restart dev server, and retry.",
-      },
-      { status: 503 },
-    );
-  }
 
   let body: unknown;
   try {
@@ -67,19 +49,23 @@ export async function POST(request: Request) {
 
   const b = body as Record<string, unknown>;
   const personSlug = typeof b.personSlug === "string" ? b.personSlug.trim() : "";
-  const companySlug = typeof b.companySlug === "string" ? b.companySlug.trim() : "";
-  const roleSlug = typeof b.roleSlug === "string" ? b.roleSlug.trim() : "";
-  const jobPostingUrl = typeof b.jobPostingUrl === "string" ? b.jobPostingUrl.trim() : "";
+  let companySlug = typeof b.companySlug === "string" ? b.companySlug.trim() : "";
+  let roleSlug = typeof b.roleSlug === "string" ? b.roleSlug.trim() : "";
+  const jobPostingUrl =
+    typeof b.jobPostingUrl === "string" ? normalizeJobPostingUrl(b.jobPostingUrl) : "";
   const modelId = typeof b.modelId === "string" ? b.modelId.trim() : "composer-2";
 
-  if (!personSlug || !companySlug || !roleSlug || !jobPostingUrl) {
+  if (!personSlug || !jobPostingUrl) {
     return NextResponse.json(
-      {
-        error:
-          "Missing required fields: personSlug, companySlug, roleSlug, jobPostingUrl",
-      },
+      { error: "Missing required fields: personSlug, jobPostingUrl" },
       { status: 400 },
     );
+  }
+
+  if (!companySlug || !roleSlug) {
+    const inferred = inferSlugsFromJobUrl(jobPostingUrl, null);
+    companySlug = companySlug || inferred.companySlug;
+    roleSlug = roleSlug || inferred.roleSlug;
   }
 
   try {
@@ -109,4 +95,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Resume Creator">
+  <rect width="180" height="180" rx="40" fill="#0f172a"/>
+  <g transform="translate(30 30)" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M105 22.5v30a7.5 7.5 0 0 0 7.5 7.5h30"/>
+    <path d="M127.5 157.5H52.5a15 15 0 0 1-15-15V37.5a15 15 0 0 1 15-15h52.5l37.5 37.5v82.5a15 15 0 0 1-15 15z"/>
+    <path d="M82.5 93.75a11.25 11.25 0 0 0-22.5 0v22.5a11.25 11.25 0 0 0 22.5 0"/>
+    <path d="M97.5 82.5l11.25 45 11.25-45"/>
+  </g>
+</svg>

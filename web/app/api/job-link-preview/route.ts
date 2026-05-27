@@ -1,20 +1,10 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { extractOgTitle, inferSlugsFromJobUrl } from "@/lib/job-from-url";
-import {
-  portalSessionCookieName,
-  verifyPortalSession,
-} from "@/lib/session";
+import { extractOgTitle, inferSlugsFromJobUrl, normalizeJobPostingUrl } from "@/lib/job-from-url";
 
 const PREVIEW_TIMEOUT_MS = 3_500;
 const PREVIEW_TIMEOUT_MS_LINKEDIN = 2_500;
 
 export async function POST(request: Request) {
-  const token = (await cookies()).get(portalSessionCookieName())?.value;
-  if (!verifyPortalSession(token)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   let body: unknown;
   try {
     body = await request.json();
@@ -27,7 +17,7 @@ export async function POST(request: Request) {
     body !== null &&
     "jobUrl" in body &&
     typeof (body as { jobUrl: unknown }).jobUrl === "string"
-      ? (body as { jobUrl: string }).jobUrl.trim()
+      ? normalizeJobPostingUrl((body as { jobUrl: string }).jobUrl)
       : "";
 
   if (!raw) {
