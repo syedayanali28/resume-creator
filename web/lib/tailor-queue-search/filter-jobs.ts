@@ -1,12 +1,10 @@
 import type { FilterTailorQueueOptions, TailorQueueSearchable } from "./types";
 import { parseTailorQueueSearchQuery } from "./parse-query";
-import { isTailorQueueJobHidden, tailorQueueJobMatchesQuery } from "./match-job";
+import { tailorQueueJobMatchesQuery } from "./match-job";
 
 /**
- * Filter queue rows for UI lists.
- *
- * Default (no query): active jobs only (not hidden).
- * With query: matching jobs, including hidden when `searchIncludesHidden` is true.
+ * Filter queue rows for UI lists. Jobs are never removed from storage;
+ * an empty query returns every job.
  */
 export function filterTailorQueueJobs<T extends TailorQueueSearchable>(
   jobs: T[],
@@ -20,13 +18,8 @@ export function filterTailorQueueJobs<T extends TailorQueueSearchable>(
       Boolean(parsed.person || parsed.company || parsed.role || parsed.link));
 
   if (!hasQuery) {
-    return jobs.filter((j) => !isTailorQueueJobHidden(j));
+    return jobs;
   }
 
-  const includeHidden = options.searchIncludesHidden !== false;
-
-  return jobs.filter((job) => {
-    if (!includeHidden && isTailorQueueJobHidden(job)) return false;
-    return tailorQueueJobMatchesQuery(job, parsed);
-  });
+  return jobs.filter((job) => tailorQueueJobMatchesQuery(job, parsed));
 }

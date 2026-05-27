@@ -6,7 +6,6 @@ export type TailorQueueSearchable = {
   companySlug: string;
   roleSlug: string;
   jobPostingUrl: string;
-  hiddenAt?: string;
 };
 
 export type SearchField = "person" | "company" | "role" | "link";
@@ -21,11 +20,6 @@ export type ParsedSearchQuery = {
 };
 
 export type FilterTailorQueueOptions = {
-  /** Raw search bar input. Empty = default list only. */
+  /** Raw search bar input. Empty = show all jobs. */
   query?: string;
-  /**
-   * When true, hidden jobs may appear if they match `query`.
-   * When false, hidden jobs are always excluded.
-   */
-  searchIncludesHidden?: boolean;
 };

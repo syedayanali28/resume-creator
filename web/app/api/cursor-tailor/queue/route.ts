@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
 import { inferSlugsFromJobUrl, normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment } from "@/lib/paths";
-import {
-  enqueueTailorQueueItem,
-  listTailorQueueItems,
-  pruneTailorQueue,
-} from "@/lib/tailor-queue-store";
+import { enqueueTailorQueueItem, listTailorQueueItems } from "@/lib/tailor-queue-store";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const personSlug = url.searchParams.get("person")?.trim();
-  const prune = url.searchParams.get("prune") === "1";
   if (personSlug) {
     try {
       assertSafePathSegment(personSlug, "personSlug");
@@ -20,14 +15,17 @@ export async function GET(request: Request) {
   }
   const apiKey = process.env.CURSOR_API_KEY?.trim();
   const advance = url.searchParams.get("advance") === "1";
-  const includeHidden = url.searchParams.get("includeHidden") === "1";
-  if (prune) {
-    await pruneTailorQueue(personSlug);
-  }
 
   try {
-    const items = await listTailorQueueItems(personSlug, apiKey, { advance, includeHidden });
-    return NextResponse.json({ items });
+    const result = await listTailorQueueItems(personSlug, apiKey, { advance });
+    return NextResponse.json({
+      items: result.items,
+      meta: {
+        queueCount: result.queueCount,
+        packetCount: result.packetCount,
+        mergedFromPackets: result.mergedFromPackets,
+      },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to load queue";
     return NextResponse.json({ error: message }, { status: 500 });

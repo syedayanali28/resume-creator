@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { JobRunViewer } from "./job-run-viewer";
-import { JobHideButton } from "@/components/tailor-queue/job-hide-button";
 import { JobPdfDownloads } from "@/components/tailor-queue/job-pdf-downloads";
 import { JobSearchBar } from "@/components/tailor-queue/job-search-bar";
-import { filterTailorQueueJobs, isTailorQueueJobHidden } from "@/lib/tailor-queue-search";
+import { filterTailorQueueJobs } from "@/lib/tailor-queue-search";
 import { useTailorQueue } from "@/lib/use-tailor-queue";
 
 function when(item: { finishedAt?: string; createdAt?: string }): string {
@@ -22,12 +21,12 @@ function statusLabel(status: string): string {
 }
 
 export function HistoryPanel() {
-  const { items, error, refresh } = useTailorQueue({ includeHidden: true });
+  const { items, error, refresh } = useTailorQueue();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const visible = useMemo(
-    () => filterTailorQueueJobs(items, { query: searchQuery, searchIncludesHidden: true }),
+    () => filterTailorQueueJobs(items, { query: searchQuery }),
     [items, searchQuery],
   );
 
@@ -35,11 +34,6 @@ export function HistoryPanel() {
     () => visible.find((x) => x.id === selectedId) ?? items.find((x) => x.id === selectedId) ?? null,
     [visible, items, selectedId],
   );
-
-  function onJobHidden(id: string) {
-    if (selectedId === id) setSelectedId(null);
-    void refresh(false);
-  }
 
   return (
     <div className="space-y-4">
@@ -74,20 +68,18 @@ export function HistoryPanel() {
               <th className="px-4 py-2 font-medium">Job</th>
               <th className="px-4 py-2 font-medium">Status</th>
               <th className="px-4 py-2 font-medium">Files</th>
-              <th className="px-4 py-2 font-medium w-20" />
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {visible.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
                   {searchQuery.trim() ? "No jobs match your search." : "No jobs yet."}
                 </td>
               </tr>
             ) : (
               visible.map((item) => {
                 const active = selectedId === item.id;
-                const hidden = isTailorQueueJobHidden(item);
                 return (
                   <tr
                     key={item.id}
@@ -95,19 +87,10 @@ export function HistoryPanel() {
                     className={
                       active
                         ? "cursor-pointer bg-sky-50 text-slate-900"
-                        : hidden
-                          ? "cursor-pointer bg-slate-50/80 text-slate-500"
-                          : "cursor-pointer text-slate-700 hover:bg-slate-50"
+                        : "cursor-pointer text-slate-700 hover:bg-slate-50"
                     }
                   >
-                    <td className="px-4 py-3 font-mono text-xs">
-                      {item.jobId ?? item.id}
-                      {hidden ? (
-                        <span className="ml-2 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-sans uppercase tracking-wide text-slate-600">
-                          hidden
-                        </span>
-                      ) : null}
-                    </td>
+                    <td className="px-4 py-3 font-mono text-xs">{item.jobId ?? item.id}</td>
                     <td className="px-4 py-3 whitespace-nowrap">{when(item)}</td>
                     <td className="px-4 py-3">{item.personSlug.replaceAll("-", " ")}</td>
                     <td className="px-4 py-3 max-w-xs">
@@ -143,15 +126,6 @@ export function HistoryPanel() {
                           Folder
                         </Link>
                       )}
-                    </td>
-                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                      {!hidden ? (
-                        <JobHideButton
-                          jobId={item.id}
-                          status={item.status}
-                          onHidden={() => onJobHidden(item.id)}
-                        />
-                      ) : null}
                     </td>
                   </tr>
                 );

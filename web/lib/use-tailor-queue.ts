@@ -13,7 +13,6 @@ export type TailorQueueRow = {
   createdAt?: string;
   updatedAt?: string;
   finishedAt?: string;
-  hiddenAt?: string;
   agentId?: string;
   runId?: string;
   summary?: string | null;
@@ -26,9 +25,8 @@ function hasActiveJobs(items: TailorQueueRow[]): boolean {
 }
 
 /** Polls the queue sparingly: fast read by default; advance=1 only while jobs are running. */
-export function useTailorQueue(options?: { personSlug?: string; includeHidden?: boolean }) {
+export function useTailorQueue(options?: { personSlug?: string }) {
   const personSlug = options?.personSlug;
-  const includeHidden = options?.includeHidden === true;
   const [items, setItems] = useState<TailorQueueRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const itemsRef = useRef(items);
@@ -38,18 +36,21 @@ export function useTailorQueue(options?: { personSlug?: string; includeHidden?: 
     async (advance: boolean): Promise<TailorQueueRow[]> => {
       const params = new URLSearchParams();
       if (personSlug) params.set("person", personSlug);
-      if (includeHidden) params.set("includeHidden", "1");
       if (advance) params.set("advance", "1");
       const res = await fetch(`/api/cursor-tailor/queue?${params}`, {
         credentials: "same-origin",
       });
-      const data = (await res.json()) as { items?: TailorQueueRow[]; error?: string };
+      const data = (await res.json()) as {
+        items?: TailorQueueRow[];
+        error?: string;
+        meta?: { queueCount?: number; packetCount?: number; mergedFromPackets?: number };
+      };
       if (!res.ok) {
         throw new Error(data.error ?? `Queue failed (${res.status})`);
       }
       return data.items ?? [];
     },
-    [personSlug, includeHidden],
+    [personSlug],
   );
 
   const refresh = useCallback(

@@ -1,6 +1,5 @@
 "use client";
 
-import { JobHideButton } from "@/components/tailor-queue/job-hide-button";
 import { JobSearchBar } from "@/components/tailor-queue/job-search-bar";
 import { enqueueTailorJob, inferJobFolderSlugs } from "@/lib/enqueue-tailor-job";
 import { normalizeJobPostingUrl } from "@/lib/job-from-url";
@@ -26,10 +25,11 @@ function parseUrls(text: string): string[] {
   return [...found];
 }
 
-function statusLabel(status: TailorQueueRow["status"]): string {
-  if (status === "queued") return "Waiting";
-  if (status === "running") return "Running";
-  if (status === "finished") return "Done";
+function statusLabel(job: TailorQueueRow): string {
+  if (job.id.startsWith("packet-")) return "On server";
+  if (job.status === "queued") return "Waiting";
+  if (job.status === "running") return "Running";
+  if (job.status === "finished") return "Done";
   return "Failed";
 }
 
@@ -43,7 +43,7 @@ export function AddJobForm({ people }: { people: PersonOption[] }) {
   const [pending, setPending] = useState<TailorQueueRow[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { items: serverJobs, error: queueError, refresh } = useTailorQueue({ includeHidden: true });
+  const { items: serverJobs, error: queueError, refresh } = useTailorQueue();
 
   async function enqueueOne(url: string, optimisticId: string) {
     const slugs = await inferJobFolderSlugs(url);
@@ -105,15 +105,18 @@ export function AddJobForm({ people }: { people: PersonOption[] }) {
   }
 
   const forPerson = useMemo(() => {
-    const byId = new Map<string, TailorQueueRow>();
-    for (const j of [...pending, ...serverJobs]) {
-      if (j.personSlug === personSlug) byId.set(j.id, j);
-    }
-    return [...byId.values()];
+    const serverForPerson = serverJobs.filter((j) => j.personSlug === personSlug);
+    const pendingForPerson = pending.filter((j) => j.personSlug === personSlug);
+    const serverByUrl = new Set(serverForPerson.map((j) => j.jobPostingUrl));
+    const rows = [
+      ...serverForPerson,
+      ...pendingForPerson.filter((p) => !serverByUrl.has(p.jobPostingUrl)),
+    ];
+    return rows.sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
   }, [pending, serverJobs, personSlug]);
 
   const visible = useMemo(
-    () => filterTailorQueueJobs(forPerson, { query: searchQuery, searchIncludesHidden: true }),
+    () => filterTailorQueueJobs(forPerson, { query: searchQuery }),
     [forPerson, searchQuery],
   );
 
@@ -206,16 +209,7 @@ export function AddJobForm({ people }: { people: PersonOption[] }) {
                       {job.jobPostingUrl}
                     </a>
                   </div>
-                  <span className="flex shrink-0 items-center gap-2">
-                    <span className="text-slate-500">{statusLabel(job.status)}</span>
-                    {!job.id.startsWith("local-") && !job.hiddenAt ? (
-                      <JobHideButton
-                        jobId={job.id}
-                        status={job.status}
-                        onHidden={() => void refresh(false)}
-                      />
-                    ) : null}
-                  </span>
+                  <span className="shrink-0 text-slate-500">{statusLabel(job)}</span>
                 </div>
                 <p className="mt-1 text-xs text-slate-500">
                   {job.companySlug} / {job.roleSlug}

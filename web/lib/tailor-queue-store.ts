@@ -8,6 +8,9 @@ import { useLocalTailorRuntime } from "@/lib/cursor-tailor-runtime";
 import { normalizeJobPostingUrl } from "@/lib/job-from-url";
 import { assertSafePathSegment, getPeopleRoot } from "@/lib/paths";
 import { publishRolePdfsAfterRun } from "@/lib/publish-role-pdfs";
+import { mergeQueueItemsById, mergeQueueWithPackets } from "@/lib/merge-queue-with-packets";
+import { scanAllJobPackets } from "@/lib/scan-job-packets";
+import { readTailorQueueFromBlob, writeTailorQueueToBlob } from "@/lib/tailor-queue-blob";
 
 export type TailorQueueStatus = "queued" | "running" | "finished" | "error";
 
@@ -30,8 +33,6 @@ export type TailorQueueItem = {
   summary?: string | null;
   durationMs?: number | null;
   error?: string;
-  /** Set when the user hides a job from default lists; still searchable in History. */
-  hiddenAt?: string;
 };
 
 function queueStoreDir(): string {
@@ -60,15 +61,37 @@ function normalizeQueueItem(raw: TailorQueueItem): TailorQueueItem {
   return { ...raw, jobId };
 }
 
-async function readAll(): Promise<TailorQueueItem[]> {
+function parseQueueJson(raw: string): TailorQueueItem[] {
+  const parsed = JSON.parse(raw) as TailorQueueItem[];
+  return Array.isArray(parsed) ? parsed.map(normalizeQueueItem) : [];
+}
+
+async function readQueueJsonSources(): Promise<TailorQueueItem[]> {
+  const lists: TailorQueueItem[][] = [];
+
+  const fromBlob = await readTailorQueueFromBlob();
+  if (fromBlob) {
+    try {
+      lists.push(parseQueueJson(fromBlob));
+    } catch {
+      /* ignore corrupt blob */
+    }
+  }
+
   try {
     await fs.mkdir(STORE_DIR, { recursive: true });
     const raw = await fs.readFile(STORE_FILE, "utf8");
-    const parsed = JSON.parse(raw) as TailorQueueItem[];
-    return Array.isArray(parsed) ? parsed.map(normalizeQueueItem) : [];
+    lists.push(parseQueueJson(raw));
   } catch {
-    return [];
+    /* no local file */
   }
+
+  if (lists.length === 0) return [];
+  return mergeQueueItemsById(...lists);
+}
+
+async function readAll(): Promise<TailorQueueItem[]> {
+  return readQueueJsonSources();
 }
 
 export async function getTailorQueueItem(ref: string): Promise<TailorQueueItem | null> {
@@ -79,8 +102,13 @@ export async function getTailorQueueItem(ref: string): Promise<TailorQueueItem |
 }
 
 async function writeAll(items: TailorQueueItem[]): Promise<void> {
+  const existing = await readQueueJsonSources();
+  const queueOnly = items.filter((x) => !x.id.startsWith("packet-"));
+  const merged = mergeQueueItemsById(existing.filter((x) => !x.id.startsWith("packet-")), queueOnly);
+  const json = JSON.stringify(merged, null, 2);
   await fs.mkdir(STORE_DIR, { recursive: true });
-  await fs.writeFile(STORE_FILE, JSON.stringify(items, null, 2), "utf8");
+  await fs.writeFile(STORE_FILE, json, "utf8");
+  await writeTailorQueueToBlob(json);
 }
 
 function normalizeModelId(modelId: string): string {
@@ -264,42 +292,34 @@ async function processQueue(apiKey?: string): Promise<void> {
   await startQueuedItem(nextQueued, apiKey);
 }
 
+export type TailorQueueListResult = {
+  items: TailorQueueItem[];
+  queueCount: number;
+  packetCount: number;
+  mergedFromPackets: number;
+};
+
 export async function listTailorQueueItems(
   personSlug?: string,
   apiKey?: string,
-  options?: { advance?: boolean; includeHidden?: boolean },
-): Promise<TailorQueueItem[]> {
+  options?: { advance?: boolean },
+): Promise<TailorQueueListResult> {
   if (options?.advance && apiKey) {
     await processQueue(apiKey);
   }
-  const latest = await readAll();
-  let filtered =
-    personSlug && personSlug.trim()
-      ? latest.filter((x) => x.personSlug === personSlug.trim())
-      : latest;
-  if (!options?.includeHidden) {
-    filtered = filtered.filter((x) => !x.hiddenAt);
-  }
-  return filtered.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-}
+  const queue = await readAll();
+  const person = personSlug?.trim();
+  const queueFiltered = person ? queue.filter((x) => x.personSlug === person) : queue;
 
-/** Hide or unhide a queue item by internal `id` or display `jobId`. */
-export async function setTailorQueueItemHidden(
-  ref: string,
-  hidden: boolean,
-): Promise<TailorQueueItem | null> {
-  const key = ref.trim();
-  if (!key) return null;
-  let updated: TailorQueueItem | null = null;
-  const saved = await saveUpdatedItem(key, (curr) => {
-    updated = {
-      ...curr,
-      hiddenAt: hidden ? nowIso() : undefined,
-      updatedAt: nowIso(),
-    };
-    return updated;
-  });
-  return saved ? updated : null;
+  const packets = await scanAllJobPackets(person);
+  const merged = mergeQueueWithPackets(queueFiltered, packets);
+
+  return {
+    items: merged,
+    queueCount: queueFiltered.length,
+    packetCount: packets.length,
+    mergedFromPackets: merged.length - queueFiltered.length,
+  };
 }
 
 /** Persist first; start processing when apiKey is set. */
@@ -340,18 +360,4 @@ export async function enqueueTailorQueueItem(input: {
 
 export async function markTailorQueueFinishedStatuses(apiKey: string): Promise<void> {
   await processQueue(apiKey);
-}
-
-export async function pruneTailorQueue(personSlug?: string): Promise<void> {
-  const items = await readAll();
-  const kept =
-    personSlug && personSlug.trim()
-      ? items.filter(
-          (x) =>
-            x.personSlug !== personSlug.trim() ||
-            x.status === "running" ||
-            x.status === "queued",
-        )
-      : items.filter((x) => x.status === "running" || x.status === "queued");
-  await writeAll(kept);
 }

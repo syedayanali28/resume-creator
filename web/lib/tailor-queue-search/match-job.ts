@@ -31,6 +31,3 @@ export function tailorQueueJobMatchesQuery(
   return true;
 }
 
-export function isTailorQueueJobHidden(job: TailorQueueSearchable): boolean {
-  return typeof job.hiddenAt === "string" && job.hiddenAt.length > 0;
-}

@@ -32,9 +32,12 @@ export function JobSearchBar({
       />
       <p className="text-xs text-slate-500">
         {value.trim()
-          ? `${resultCount} match${resultCount === 1 ? "" : "es"} (includes hidden jobs)`
-          : `${resultCount} active job${resultCount === 1 ? "" : "s"} · ${totalCount} total in archive`}
-        . Use{" "}
+          ? `${resultCount} match${resultCount === 1 ? "" : "es"}`
+          : `${resultCount} job${resultCount === 1 ? "" : "s"}`}
+        {!value.trim() && totalCount > 0
+          ? " — includes jobs recovered from server PDFs."
+          : null}{" "}
+        Use{" "}
         <code className="rounded bg-slate-100 px-1">person:</code>,{" "}
         <code className="rounded bg-slate-100 px-1">company:</code>,{" "}
         <code className="rounded bg-slate-100 px-1">role:</code>, or{" "}
