@@ -1,5 +1,5 @@
 import { cloudTargetBranch } from "@/lib/cursor-cloud-agent";
-import { pdfFilename, type PdfKind } from "@/lib/pdf-files";
+import { pdfFilename, type PdfKind } from "@/lib/pdf-urls";
 
 /** Public GitHub raw URL for a role PDF (when cloud agent pushed to the configured repo). */
 export function githubRawPdfUrl(

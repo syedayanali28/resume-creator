@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { pdfApiUrl, pdfViewerPageUrl } from "@/lib/pdf-files";
+import { pdfApiUrl, pdfViewerPageUrl } from "@/lib/pdf-urls";
 
 type PdfLinks = {
   hasResume: boolean;

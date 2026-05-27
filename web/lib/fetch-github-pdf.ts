@@ -1,5 +1,5 @@
 import { githubRawPdfUrl } from "@/lib/github-raw-pdf";
-import type { PdfKind } from "@/lib/pdf-files";
+import type { PdfKind } from "@/lib/pdf-urls";
 
 const RETRY_DELAYS_MS = [0, 3_000, 6_000, 12_000, 20_000];
 

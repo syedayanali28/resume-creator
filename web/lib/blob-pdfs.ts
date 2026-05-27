@@ -1,6 +1,7 @@
 import { list } from "@vercel/blob";
+import type { PdfKind } from "@/lib/pdf-urls";
 
-export type PdfKind = "resume" | "cover-letter";
+export type { PdfKind };
 
 type RoleBlobAvailability = {
   resumeUrl: string | null;
