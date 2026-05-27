@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -334,19 +334,19 @@ ged.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 8292 strings out of 476139
- 131930 string characters out of 5794454
- 1931975 words of memory out of 5000000
- 30244 multiletter control sequences out of 15000+600000
+ 8292 strings out of 476182
+ 131930 string characters out of 5795595
+ 1932975 words of memory out of 5000000
+ 30237 multiletter control sequences out of 15000+600000
  564817 words of font info for 39 fonts, out of 8000000 for 9000
- 36 hyphenation exceptions out of 8191
- 75i,5n,79p,761b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 14 hyphenation exceptions out of 8191
+ 75i,5n,79p,873b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmr10.pfb>
 Output written on /workspace/people/Zhao-Yanbo/DBS-Bank/Treasury-Specialist-Tre
 asures-Licensed-Sales-Incentive-In-Hong-Kong-Hong/Zhao-Yanbo_DBS-Bank_Treasury-
 Specialist-Treasures-Licensed-Sales-Incentive-In-Hong-Kong-Hong_cover-letter.pd
-f (1 page, 64307 bytes).
+f (1 page, 65607 bytes).
 PDF statistics:
  26 PDF objects out of 1000 (max. 8388607)
  18 compressed objects within 1 object stream
