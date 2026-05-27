@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -235,7 +235,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 11
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 12
 .
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
@@ -252,24 +252,24 @@ res-Licensed-Sales-Incentive-In-Hong-Kong-Hong_cover-letter.aux)
 \openout1 = `Zhao-Yanbo_DBS-Bank_Treasury-Specialist-Treasures-Licensed-Sales-I
 ncentive-In-Hong-Kong-Hong_cover-letter.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -305,7 +305,7 @@ LaTeX Font Info:    ... okay on input line 11.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 11.
+Package hyperref Info: Link coloring OFF on input line 12.
 
 (/workspace/people/Zhao-Yanbo/DBS-Bank/Treasury-Specialist-Treasures-Licensed-S
 ales-Incentive-In-Hong-Kong-Hong/Zhao-Yanbo_DBS-Bank_Treasury-Specialist-Treasu
@@ -340,16 +340,16 @@ Here is how much of TeX's memory you used:
  30237 multiletter control sequences out of 15000+600000
  564817 words of font info for 39 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,5n,79p,808b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,5n,79p,831b,430s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmr10.pfb>
 Output written on /workspace/people/Zhao-Yanbo/DBS-Bank/Treasury-Specialist-Tre
 asures-Licensed-Sales-Incentive-In-Hong-Kong-Hong/Zhao-Yanbo_DBS-Bank_Treasury-
 Specialist-Treasures-Licensed-Sales-Incentive-In-Hong-Kong-Hong_cover-letter.pd
-f (1 page, 65498 bytes).
+f (1 page, 64860 bytes).
 PDF statistics:
- 26 PDF objects out of 1000 (max. 8388607)
- 18 compressed objects within 1 object stream
+ 25 PDF objects out of 1000 (max. 8388607)
+ 17 compressed objects within 1 object stream
  2 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

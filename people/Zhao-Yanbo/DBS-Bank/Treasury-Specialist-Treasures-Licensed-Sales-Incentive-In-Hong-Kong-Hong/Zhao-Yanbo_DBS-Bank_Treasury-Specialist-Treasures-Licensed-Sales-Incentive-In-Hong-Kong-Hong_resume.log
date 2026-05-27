@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.27)  27 MAY 2026 09:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -254,7 +254,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 41
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 43
 .
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
@@ -271,24 +271,24 @@ res-Licensed-Sales-Incentive-In-Hong-Kong-Hong_resume.aux)
 \openout1 = `Zhao-Yanbo_DBS-Bank_Treasury-Specialist-Treasures-Licensed-Sales-I
 ncentive-In-Hong-Kong-Hong_resume.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -349,7 +349,7 @@ File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 \makeMPintoPDFobject=\count284
 \everyMPtoPDFconversion=\toks23
 )) (/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 41.
+Package hyperref Info: Link coloring ON on input line 43.
 
 (/workspace/people/Zhao-Yanbo/DBS-Bank/Treasury-Specialist-Treasures-Licensed-S
 ales-Incentive-In-Hong-Kong-Hong/Zhao-Yanbo_DBS-Bank_Treasury-Specialist-Treasu
@@ -364,39 +364,39 @@ ncentive-In-Hong-Kong-Hong_resume.out'.
 
 
 LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
-(Font)              using `T1/lmr/bx/n' instead on input line 52.
+(Font)              using `T1/lmr/bx/n' instead on input line 54.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 5
-4.
+6.
 (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 5
-4.
+6.
 
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-54.
+56.
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-54.
+56.
 
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 54.
+(Font)              <9> on input line 56.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 54.
+(Font)              <6> on input line 56.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 54.
+(Font)              <5> on input line 56.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 6
-2.
+4.
 
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -422,7 +422,7 @@ sures-Licensed-Sales-Incentive-In-Hong-Kong-Hong_resume.out' has not changed.
 Here is how much of TeX's memory you used:
  9350 strings out of 476182
  150542 string characters out of 5795595
- 1950975 words of memory out of 5000000
+ 1951975 words of memory out of 5000000
  31233 multiletter control sequences out of 15000+600000
  605789 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -435,7 +435,7 @@ xmf/fonts/type1/public/lm/lmri8.pfb>
 Output written on /workspace/people/Zhao-Yanbo/DBS-Bank/Treasury-Specialist-Tre
 asures-Licensed-Sales-Incentive-In-Hong-Kong-Hong/Zhao-Yanbo_DBS-Bank_Treasury-
 Specialist-Treasures-Licensed-Sales-Incentive-In-Hong-Kong-Hong_resume.pdf (1 p
-age, 193961 bytes).
+age, 194115 bytes).
 PDF statistics:
  54 PDF objects out of 1000 (max. 8388607)
  35 compressed objects within 1 object stream
